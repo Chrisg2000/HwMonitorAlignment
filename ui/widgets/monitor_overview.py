@@ -2,19 +2,18 @@ from PySide2.QtCore import QRect, QRectF, Qt, QPointF
 from PySide2.QtGui import QPainter, QPaintEvent, QColor, QLinearGradient, QFont, QResizeEvent
 from PySide2.QtWidgets import QWidget
 
-from backend.backend import Backend
+from backend.monitor_backend import MonitorProxyBackend
 from core.monitor_model import MonitorModel
 
 
 class MonitorOverview(QWidget):
 
-    def __init__(self, backend: Backend, parent=None):
+    def __init__(self, backend: MonitorProxyBackend, parent=None):
         super().__init__(parent=parent)
 
         self.backend = backend
-        self.backend.get_monitor_model().item_added.connect(self._item_added)
-        self.backend.get_monitor_model().item_removed.connect(self._item_removed)
-        self.backend.get_monitor_model().model_reset.connect(self._reset)
+        self._backend_changed(self.backend)
+        self.backend.backend_changed.connect(self._backend_changed)
 
         self.vscreen_width = 0
         self.vscreen_height = 0
@@ -48,6 +47,11 @@ class MonitorOverview(QWidget):
 
         if model_reset:
             self.update()
+
+    def _backend_changed(self, new_backend):
+        new_backend.monitor_model.item_added.connect(self._item_added)
+        new_backend.monitor_model.item_removed.connect(self._item_removed)
+        new_backend.monitor_model.model_reset.connect(self._reset)
 
     def _item_added(self, index, item):
         self._reset()

@@ -1,3 +1,4 @@
+from backend.proxy_backend import ProxyBackend
 from backend.win32_backend import Win32Backend
 from ui.main_window import MainWindow
 
@@ -5,10 +6,9 @@ from ui.main_window import MainWindow
 class HwMonitorAlignmentApp:
 
     def __init__(self):
-        self.backend = Win32Backend()
+        win32backend = Win32Backend()
+        self.backend = ProxyBackend(win32backend)
         self.main_window = MainWindow(self.backend)
-
-        self.monitors = self.backend.get_monitor_model()
 
     def start(self):
         self.main_window.show()

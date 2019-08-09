@@ -1,26 +1,21 @@
 from abc import abstractmethod
 from typing import Tuple
 
-from core.list_model import ListModel
-
 
 class Backend:
 
-    def __init__(self):
-        self._monitor_model = ListModel()
-
-    @property
-    def monitor_model(self):
-        return self._monitor_model
-
-    @abstractmethod
-    def get_monitor_model(self) -> ListModel:
-        pass
-
     @abstractmethod
     def get_vscreen_size(self) -> Tuple[int, int]:
-        pass
+        """Return the width and height of the virtual screen in pixels.
+
+        The virtual screen is the bounding rectangle of all display monitors.
+        """
+        raise NotImplementedError("This function needs to be implemented by a derived class")
 
     @abstractmethod
     def get_vscreen_normalize_offset(self) -> Tuple[int, int]:
-        pass
+        """Returns the coordinates for the top left corner of the virtual screen.
+
+        The virtual screen is the bounding rectangle of all display monitors.
+        """
+        raise NotImplementedError("This function needs to be implemented by a derived class")

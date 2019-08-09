@@ -1,7 +1,6 @@
 from _ctypes import byref
 
-from backend.backend import Backend
-from core.list_model import ListModel
+from backend.monitor_backend import MonitorProxyBackend
 from core.monitor_model import MonitorModel
 from win32.func import GetMonitorInfoExW, MonitorEnumProc, EnumDisplayMonitors, EnumDisplayDevicesW, GetSystemMetrics, \
     EnumDisplaySettingsW
@@ -11,17 +10,12 @@ from win32.structs.monitorinfo import MONITORINFOEX, MONITORINFO_FLAGS
 from win32.structs.system_metrics import SystemMetricsFlags
 
 
-class Win32Backend(Backend):
+class Win32Backend(MonitorProxyBackend):
 
     def __init__(self):
         super().__init__()
 
-    def get_monitor_model(self, refresh=False) -> ListModel:
-        if self._monitor_model.empty() or refresh:
-            if refresh:
-                self._monitor_model.reset()
-            self._scan_monitors()
-        return self._monitor_model
+        self._scan_monitors()
 
     def get_vscreen_size(self):
         width = GetSystemMetrics(SystemMetricsFlags.SM_CXVIRTUALSCREEN)
@@ -57,7 +51,7 @@ class Win32Backend(Backend):
             model_item.position_y = monitor_info.rcMonitor.top
             model_item.orientation = devmode.DUMMYUNIONNAME.DUMMYSTRUCTNAME2.dmDisplayOrientation
 
-            self._monitor_model.add(model_item)
+            self.monitor_model.add(model_item)
             return True
 
         EnumDisplayMonitors(None, None, _proc_monitor, 0)
