@@ -1,5 +1,5 @@
 from PySide2.QtCore import QRect, QRectF, Qt, QPointF
-from PySide2.QtGui import QPainter, QPaintEvent, QColor, QLinearGradient, QFont
+from PySide2.QtGui import QPainter, QPaintEvent, QColor, QLinearGradient, QFont, QResizeEvent
 from PySide2.QtWidgets import QWidget
 
 from backend.backend import Backend
@@ -34,6 +34,11 @@ class MonitorOverview(QWidget):
         self.monitor_color_gradient_top = QColor(70, 161, 84)
         self.monitor_color_gradient_bottom = QColor(59, 128, 169)
 
+        self.__view_ratio = 1
+        self.__view_width = 0
+        self.__view_height = 0
+        self.__view_offset_x = 0
+        self.__view_offset_y = 0
         self.__working_area_ratio = (1 - self._working_area) * 0.5
 
     def _reset(self, model_reset=True):
@@ -50,6 +55,26 @@ class MonitorOverview(QWidget):
     def _item_removed(self, index, item):
         self._reset()
 
+    def resizeEvent(self, event: QResizeEvent):
+        self._measure()
+
+    def _measure(self):
+        self.__view_width = self.width()
+        self.__view_height = self.height()
+        # create aspect-ratio-constant working area
+        working_area = QRectF(self.__working_area_ratio * self.__view_width,
+                              self.__working_area_ratio * self.__view_height,
+                              self._working_area * self.__view_width,
+                              self._working_area * self.__view_height)
+        self.__view_ratio = working_area.width() / self.vscreen_width
+        h = self.__view_ratio * self.vscreen_height
+        if h > self.__view_height:
+            self.__view_ratio = working_area.height() / self.vscreen_height
+        w = self.__view_ratio * self.vscreen_width
+        h = self.__view_ratio * self.vscreen_height
+        self.__view_offset_x = working_area.left() + ((working_area.width() - w) / 2)
+        self.__view_offset_y = working_area.top() + ((working_area.height() - h) / 2)
+
     def paintEvent(self, event: QPaintEvent):
         qp = QPainter()
         qp.begin(self)
@@ -57,30 +82,12 @@ class MonitorOverview(QWidget):
         qp.end()
 
     def draw_widget(self, painter: QPainter):
-        view_width = self.width()
-        view_height = self.height()
-
         # fill background
-        painter.fillRect(QRect(0, 0, view_width, view_height), self.background_color)
-
-        # create aspect-ratio-constant working area
-        working_area = QRectF(self.__working_area_ratio * view_width, self.__working_area_ratio * view_height,
-                              self._working_area * view_width, self._working_area * view_height)
-
-        _ratio = working_area.width() / self.vscreen_width
-        h = _ratio * self.vscreen_height
-        if h > view_height:
-            _ratio = working_area.height() / self.vscreen_height
-
-        w = _ratio * self.vscreen_width
-        h = _ratio * self.vscreen_height
-
-        offset_x = working_area.left() + ((working_area.width() - w) / 2)
-        offset_y = working_area.top() + ((working_area.height() - h) / 2)
+        painter.fillRect(QRect(0, 0, self.__view_width, self.__view_height), self.background_color)
 
         # Set border color
         pen = painter.pen()
-        pen.setWidthF(self.monitor_border_width * _ratio)
+        pen.setWidthF(self.monitor_border_width * self.__view_ratio)
         pen.setCapStyle(Qt.FlatCap)
         painter.setPen(pen)
 
@@ -88,15 +95,14 @@ class MonitorOverview(QWidget):
         monitor: MonitorModel
         for monitor in self.backend.monitor_model:
             # calculate position of monitor in canvas
-            pos_x = offset_x + _ratio * (monitor.position_x - self.x_offset)
-            pos_y = offset_y + _ratio * (monitor.position_y - self.y_offset)
-            size_x = _ratio * monitor.screen_width
-            size_y = _ratio * monitor.screen_height
+            pos_x = self.__view_offset_x + self.__view_ratio * (monitor.position_x - self.x_offset)
+            pos_y = self.__view_offset_y + self.__view_ratio * (monitor.position_y - self.y_offset)
+            size_x = self.__view_ratio * monitor.screen_width
+            size_y = self.__view_ratio * monitor.screen_height
             rect_monitor = QRectF(pos_x, pos_y, size_x, size_y)
 
             # put gradient in the background
             gradient = QLinearGradient(rect_monitor.topRight(), rect_monitor.bottomLeft())
-
             gradient.setColorAt(0.0, self.monitor_color_gradient_top)
             gradient.setColorAt(1.0, self.monitor_color_gradient_bottom)
             painter.fillRect(rect_monitor, gradient)
@@ -118,7 +124,7 @@ class MonitorOverview(QWidget):
                 painter.drawText(rect, Qt.AlignCenter, '*')
             painter.restore()
 
-            # draw borders inside rect
+            # draw borders inside monitor_rect
             border_offset = painter.pen().widthF() / 2
             painter.drawLine(QPointF(rect_monitor.left(), rect_monitor.top() + border_offset),
                              QPointF(rect_monitor.right(), rect_monitor.top() + border_offset))
