@@ -1,8 +1,7 @@
 from _ctypes import byref
-from typing import List
 
 from backend.monitor_backend import BaseMonitorBackend
-from core.monitor_model import MonitorModel
+from core.monitor import Monitor
 from win32.func import GetMonitorInfoExW, MonitorEnumProc, EnumDisplayMonitors, EnumDisplayDevicesW, GetSystemMetrics, \
     EnumDisplaySettingsW
 from win32.structs.devmode import DEVMODE
@@ -31,26 +30,24 @@ class Win32Backend(BaseMonitorBackend):
     def _scan_monitors(self):
         @MonitorEnumProc
         def _proc_monitor(hmonitor, hdc, lprect, lparam):
-            model_item = MonitorModel()
-
+            # Gather information
+            devmode = DEVMODE()
             monitor_info = MONITORINFOEX()
-            GetMonitorInfoExW(hmonitor, byref(monitor_info))
-
             display_device = DISPLAY_DEVICE()
+            GetMonitorInfoExW(hmonitor, byref(monitor_info))
+            EnumDisplaySettingsW(monitor_info.szDevice, 0, byref(devmode))
             EnumDisplayDevicesW(monitor_info.szDevice, 0, byref(display_device), 0)
 
-            devmode = DEVMODE()
-            EnumDisplaySettingsW(monitor_info.szDevice, 0, byref(devmode))
-
-            model_item.device_name = monitor_info.szDevice
-            model_item.monitor_name = display_device.DeviceString
-            model_item.primary = MONITORINFO_FLAGS.MONITORINFOF_PRIMARY in MONITORINFO_FLAGS(monitor_info.dwFlags)
-
-            model_item.screen_width = monitor_info.rcMonitor.right - monitor_info.rcMonitor.left
-            model_item.screen_height = monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top
-            model_item.position_x = monitor_info.rcMonitor.left
-            model_item.position_y = monitor_info.rcMonitor.top
-            model_item.orientation = devmode.DUMMYUNIONNAME.DUMMYSTRUCTNAME2.dmDisplayOrientation
+            # Create Monitor Item
+            model_item = Monitor(device_name=monitor_info.szDevice,
+                                 monitor_name=display_device.DeviceString,
+                                 screen_width=monitor_info.rcMonitor.right - monitor_info.rcMonitor.left,
+                                 screen_height=monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top,
+                                 position_x=monitor_info.rcMonitor.left,
+                                 position_y=monitor_info.rcMonitor.top,
+                                 orientation=devmode.DUMMYUNIONNAME.DUMMYSTRUCTNAME2.dmDisplayOrientation,
+                                 primary=MONITORINFO_FLAGS.MONITORINFOF_PRIMARY in MONITORINFO_FLAGS(
+                                     monitor_info.dwFlags))
 
             self.monitor_model.add(model_item)
             return True

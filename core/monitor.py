@@ -10,20 +10,28 @@ class DisplayOrientation(enum.Enum):
     DMDO_270 = 3
 
 
-class MonitorModel:
+class Monitor:
 
-    def __init__(self):
+    def __init__(self,
+                 device_name='',
+                 monitor_name='',
+                 screen_width=0,
+                 screen_height=0,
+                 position_x=0,
+                 position_y=0,
+                 primary=False,
+                 orientation=DisplayOrientation.DMDO_DEFAULT):
         super().__init__()
-        self.device_name = ''
-        self.monitor_name = ''
+        self.device_name = device_name
+        self.monitor_name = monitor_name
 
-        self.screen_width = 0
-        self.screen_height = 0
-        self.position_x = 0
-        self.position_y = 0
-        self.orientation = DisplayOrientation.DMDO_DEFAULT
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.position_x = position_x
+        self.position_y = position_y
+        self.orientation = orientation
 
-        self.primary = False
+        self.primary = primary
 
     @property
     def aspect_ratio(self) -> float:

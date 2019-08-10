@@ -3,7 +3,7 @@ from PySide2.QtGui import QPainter, QPaintEvent, QColor, QLinearGradient, QFont,
 from PySide2.QtWidgets import QWidget
 
 from backend.monitor_backend import BaseMonitorBackend
-from core.monitor_model import MonitorModel
+from core.monitor import Monitor
 
 
 class MonitorOverview(QWidget):
@@ -92,7 +92,7 @@ class MonitorOverview(QWidget):
         painter.setPen(pen)
 
         # Draw for each monitor corresponding
-        monitor: MonitorModel
+        monitor: Monitor
         for monitor in self.backend.monitor_model:
             # calculate position of monitor in canvas
             pos_x = self.__view_offset_x + self.__view_ratio * (monitor.position_x - self.x_offset)
