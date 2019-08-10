@@ -1,6 +1,7 @@
 from _ctypes import byref
+from typing import List
 
-from backend.monitor_backend import MonitorProxyBackend
+from backend.monitor_backend import BaseMonitorBackend
 from core.monitor_model import MonitorModel
 from win32.func import GetMonitorInfoExW, MonitorEnumProc, EnumDisplayMonitors, EnumDisplayDevicesW, GetSystemMetrics, \
     EnumDisplaySettingsW
@@ -10,7 +11,7 @@ from win32.structs.monitorinfo import MONITORINFOEX, MONITORINFO_FLAGS
 from win32.structs.system_metrics import SystemMetricsFlags
 
 
-class Win32Backend(MonitorProxyBackend):
+class Win32Backend(BaseMonitorBackend):
 
     def __init__(self):
         super().__init__()

@@ -1,21 +1,32 @@
+from abc import ABC
+
 from backend.backend import Backend
 from core.list_model import ListModel
 from core.signals import Signal
 
 
-class MonitorProxyBackend(Backend):
+class BaseMonitorBackend(Backend, ABC):
 
     def __init__(self):
         self.__monitor_model = ListModel()
 
-        self.monitor_model_changed = Signal()
-        """Slot function signature: slot(new_model)"""
+        self.monitor_added = Signal()
+        self.monitor_removed = Signal()
+        self.monitor_model_reset = Signal()
+
+        self.__monitor_model.item_added.connect(self._monitor_added)
+        self.__monitor_model.item_removed.connect(self._monitor_removed)
+        self.__monitor_model.model_reset.connect(self._monitor_model_reset)
 
     @property
     def monitor_model(self):
         return self.__monitor_model
 
-    @monitor_model.setter
-    def monitor_model(self, value):
-        self.__monitor_model = value
-        self.monitor_model_changed.emit(value)
+    def _monitor_added(self, index, item):
+        self.monitor_added.emit(index, item)
+
+    def _monitor_removed(self, index, item):
+        self.monitor_removed.emit(index, item)
+
+    def _monitor_model_reset(self):
+        self.monitor_model_reset.emit()

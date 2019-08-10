@@ -2,18 +2,19 @@ from PySide2.QtCore import QRect, QRectF, Qt, QPointF
 from PySide2.QtGui import QPainter, QPaintEvent, QColor, QLinearGradient, QFont, QResizeEvent
 from PySide2.QtWidgets import QWidget
 
-from backend.monitor_backend import MonitorProxyBackend
+from backend.monitor_backend import BaseMonitorBackend
 from core.monitor_model import MonitorModel
 
 
 class MonitorOverview(QWidget):
 
-    def __init__(self, backend: MonitorProxyBackend, parent=None):
+    def __init__(self, backend: BaseMonitorBackend, parent=None):
         super().__init__(parent=parent)
 
         self.backend = backend
-        self._backend_changed(self.backend)
-        self.backend.backend_changed.connect(self._backend_changed)
+        self.backend.monitor_added.connect(self._monitor_added)
+        self.backend.monitor_removed.connect(self._monitor_removed)
+        self.backend.monitor_model_reset.connect(self._reset)
 
         self.vscreen_width = 0
         self.vscreen_height = 0
@@ -40,6 +41,12 @@ class MonitorOverview(QWidget):
         self.__view_offset_y = 0
         self.__working_area_ratio = (1 - self._working_area) * 0.5
 
+    def _monitor_added(self, index, item):
+        self._reset()
+
+    def _monitor_removed(self, index, item):
+        self._reset()
+
     def _reset(self, model_reset=True):
         self.vscreen_width, self.vscreen_height = self.backend.get_vscreen_size()
         self.x_offset, self.y_offset = self.backend.get_vscreen_normalize_offset()
@@ -47,17 +54,6 @@ class MonitorOverview(QWidget):
 
         if model_reset:
             self.update()
-
-    def _backend_changed(self, new_backend):
-        new_backend.monitor_model.item_added.connect(self._item_added)
-        new_backend.monitor_model.item_removed.connect(self._item_removed)
-        new_backend.monitor_model.model_reset.connect(self._reset)
-
-    def _item_added(self, index, item):
-        self._reset()
-
-    def _item_removed(self, index, item):
-        self._reset()
 
     def resizeEvent(self, event: QResizeEvent):
         self._measure()

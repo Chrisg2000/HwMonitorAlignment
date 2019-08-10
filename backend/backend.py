@@ -10,7 +10,6 @@ class Backend:
 
         The virtual screen is the bounding rectangle of all display monitors.
         """
-        raise NotImplementedError("This function needs to be implemented by a derived class")
 
     @abstractmethod
     def get_vscreen_normalize_offset(self) -> Tuple[int, int]:
@@ -18,4 +17,3 @@ class Backend:
 
         The virtual screen is the bounding rectangle of all display monitors.
         """
-        raise NotImplementedError("This function needs to be implemented by a derived class")
