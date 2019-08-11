@@ -1,6 +1,8 @@
 import enum
 import re
 
+from core.has_properties import HasProperties, Property
+
 
 # noinspection SpellCheckingInspection
 class DisplayOrientation(enum.Enum):
@@ -10,7 +12,17 @@ class DisplayOrientation(enum.Enum):
     DMDO_270 = 3
 
 
-class Monitor:
+class Monitor(HasProperties):
+    device_name = Property(default='')
+    monitor_name = Property(default='')
+
+    screen_width = Property(default=0)
+    screen_height = Property(default=0)
+    position_x = Property(default=0)
+    position_y = Property(default=0)
+    orientation = Property(default=DisplayOrientation.DMDO_DEFAULT)
+
+    primary = Property(default=False)
 
     def __init__(self,
                  device_name='',

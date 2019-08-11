@@ -1,6 +1,7 @@
 from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 
 from backend.monitor_backend import BaseMonitorBackend
+from ui.align.align_widget import AlignWidget
 from ui.widgets.monitor_overview import MonitorOverview
 
 
@@ -20,3 +21,6 @@ class MainWindow(QMainWindow):
 
         widget = MonitorOverview(self.backend)
         self.centralWidget().layout().addWidget(widget)
+
+        self.test = AlignWidget(self.backend.monitor_model.get(0))
+        self.test.show()
