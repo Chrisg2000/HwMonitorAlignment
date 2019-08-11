@@ -57,3 +57,11 @@ class Monitor(HasProperties):
         if len(indices) is not 1:
             raise BrokenPipeError("Windows returned an Display with more than one index")
         return indices[0]
+
+    def __str__(self):
+        return f"device_name: '{self.device_name}', " \
+            f"monitor_name: '{self.monitor_name}', " \
+            f"resolution: {self.screen_width}x{self.screen_height}, " \
+            f"position: ({self.position_x} | {self.position_y}), " \
+            f"orientation: {self.orientation}, " \
+            f"primary: {self.primary}"
