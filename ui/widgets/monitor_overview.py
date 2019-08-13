@@ -93,7 +93,7 @@ class MonitorOverview(QWidget):
 
         # Draw for each monitor corresponding
         monitor: Monitor
-        for monitor in self.backend.monitor_model:
+        for index, monitor in enumerate(self.backend.monitor_model, 1):
             # calculate position of monitor in canvas
             pos_x = self.__view_offset_x + self.__view_ratio * (monitor.position_x - self.x_offset)
             pos_y = self.__view_offset_y + self.__view_ratio * (monitor.position_y - self.y_offset)
@@ -111,8 +111,8 @@ class MonitorOverview(QWidget):
             painter.save()
             painter.setPen(self.monitor_index_font_color)
             painter.setFont(self.monitor_index_font)
-            self._font_size_for_rect(painter, rect_monitor, monitor.index)
-            painter.drawText(rect_monitor, Qt.AlignCenter, monitor.index)
+            self._font_size_for_rect(painter, rect_monitor, str(index))
+            painter.drawText(rect_monitor, Qt.AlignCenter, str(index))
 
             # Primary display
             if monitor.primary:

@@ -1,7 +1,6 @@
 import enum
-import re
 
-from core.has_properties import HasProperties, Property
+from core.has_properties import HasProperties, Property, WriteOnceProperty
 
 
 # noinspection SpellCheckingInspection
@@ -13,7 +12,7 @@ class DisplayOrientation(enum.Enum):
 
 
 class Monitor(HasProperties):
-    device_name = Property(default='')
+    device_name = WriteOnceProperty(default='')
     monitor_name = Property(default='')
 
     screen_width = Property(default=0)
@@ -50,13 +49,6 @@ class Monitor(HasProperties):
         if self.screen_height == 0:
             raise ValueError("Invalid Monitor defined. Impossible size of height = 0")
         return self.screen_width / self.screen_height
-
-    @property
-    def index(self) -> str:
-        indices = re.findall(r'\d+', self.device_name)
-        if len(indices) is not 1:
-            raise BrokenPipeError("Windows returned an Display with more than one index")
-        return indices[0]
 
     def __str__(self):
         return f"device_name: '{self.device_name}', " \

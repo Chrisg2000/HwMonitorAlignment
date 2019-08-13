@@ -41,7 +41,6 @@ class Win32Backend(BaseMonitorBackend):
                                      monitor_info.dwFlags))
 
             self.monitor_model.add(model_item)
-            print(model_item)
             return True
 
         EnumDisplayMonitors(None, None, _proc_monitor, 0)

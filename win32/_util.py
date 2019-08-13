@@ -46,7 +46,7 @@ def check_zero_factory(function_name=None):
     return check_zero
 
 
-check_zero = check_null_factory()
+check_zero = check_zero_factory()
 
 
 def check_false_factory(function_name=None):

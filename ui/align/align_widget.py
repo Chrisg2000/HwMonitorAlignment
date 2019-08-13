@@ -1,3 +1,4 @@
+from PySide2.QtGui import QResizeEvent, Qt, QKeyEvent
 from PySide2.QtWidgets import QWidget, QGraphicsView, QGraphicsScene, QGridLayout
 
 from core.monitor import Monitor
@@ -15,11 +16,23 @@ class AlignWidget(QWidget):
 
         self.monitor = monitor
 
-        self.graphics_view = QGraphicsView(self)
         self.graphics_scene = QGraphicsScene(self)
-        self.graphics_view.setScene(self.graphics_scene)
 
-        self.info_group = InfoBox(self.monitor)
-        self.graphics_scene.addItem(self.info_group)
+        self.info_box = InfoBox(self.monitor)
+        self.graphics_scene.addItem(self.info_box)
 
+        self.graphics_scene.addRect(0, 0, 100, 100)
+
+        self.graphics_view = QGraphicsView(self.graphics_scene, self)
+        self.graphics_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.graphics_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.layout().addWidget(self.graphics_view)
+
+    def resizeEvent(self, event: QResizeEvent):
+        self.graphics_scene.setSceneRect(0, 0,
+                                         event.size().width(), event.size().height())
+
+    def keyPressEvent(self, event: QKeyEvent):
+        if event.key() == Qt.Key_Z:
+            self.monitor.monitor_name = 'Test monitor_name extra long'
+        super().keyPressEvent(event)
