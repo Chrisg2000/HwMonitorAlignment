@@ -1,16 +1,9 @@
 import ctypes
-import enum
 from ctypes import wintypes
 
 from win32.structs._base_type import _Win32BaseStruct, CCHDEVICENAME
 
 
-# noinspection PyPep8Naming,SpellCheckingInspection
-class MONITORINFO_FLAGS(enum.IntFlag):
-    MONITORINFOF_PRIMARY = 0x00000001
-
-
-# noinspection SpellCheckingInspection
 class MONITORINFO(_Win32BaseStruct):
     """
     typedef struct tagMONITORINFO {
@@ -32,7 +25,6 @@ class MONITORINFO(_Win32BaseStruct):
         self.cbSize = ctypes.sizeof(MONITORINFO)
 
 
-# noinspection SpellCheckingInspection
 class MONITORINFOEX(_Win32BaseStruct):
     """
     typedef struct tagMONITORINFOEX {

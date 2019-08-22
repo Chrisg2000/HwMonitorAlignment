@@ -1,12 +1,11 @@
 import ctypes
+from ctypes import wintypes
 
-# noinspection SpellCheckingInspection
 CCHDEVICENAME = 32
-# noinspection SpellCheckingInspection
 CCHFORMNAME = 32
+c_enum = ctypes.c_uint32
 
 
-# noinspection SpellCheckingInspection
 class _Win32BaseStruct(ctypes.Structure):
     _fields_ = []
 
@@ -16,7 +15,6 @@ class _Win32BaseStruct(ctypes.Structure):
              for field in self._fields_]))
 
 
-# noinspection SpellCheckingInspection
 class _Win32BaseUnion(ctypes.Union):
     _fields_ = []
 
@@ -24,3 +22,16 @@ class _Win32BaseUnion(ctypes.Union):
         return "{}: {{{}}}".format(self.__class__.__name__, ", ".join(
             ["{}: {}".format(field[0], getattr(self, field[0]))
              for field in self._fields_]))
+
+
+class LUID(_Win32BaseStruct):
+    """
+    typedef struct _LUID {
+      DWORD LowPart;
+      LONG  HighPart;
+    } LUID, *PLUID;
+    """
+    _fields_ = [
+        ("LowPart", wintypes.DWORD),
+        ("HighPart", wintypes.LONG),
+    ]

@@ -13,8 +13,8 @@ def function_factory(function,
     return function
 
 
-def make_error(function, function_name=None):
-    code = GetLastError()
+def make_error(function, function_name=None, rcode=None):
+    code = rcode if rcode else GetLastError()
     description = FormatError(code).strip()
     if function_name is None:
         function_name = function.__name__
@@ -47,6 +47,18 @@ def check_zero_factory(function_name=None):
 
 
 check_zero = check_zero_factory()
+
+
+def check_rcode_factory(function_name=None):
+    def check_rcode(result, function, arguments, *args):
+        if result != 0:
+            raise make_error(function, function_name, result)
+        return result
+
+    return check_rcode
+
+
+check_rcode = check_rcode_factory()
 
 
 def check_false_factory(function_name=None):

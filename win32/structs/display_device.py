@@ -1,22 +1,10 @@
 import ctypes
-import enum
 from ctypes import wintypes
+
 from win32.structs._base_type import _Win32BaseStruct
 
 
-class DISPLAY_DEVICE_FLAGS(enum.IntFlag):
-    DISPLAY_DEVICE_ACTIVE = 0x1
-    DISPLAY_DEVICE_MULTI_DRIVER = 0x2
-    DISPLAY_DEVICE_PRIMARY_DEVICE = 0x4
-    DISPLAY_DEVICE_MIRRORING_DRIVER = 0x8
-    DISPLAY_DEVICE_VGA_COMPATIBLE = 0x10
-    DISPLAY_DEVICE_REMOVABLE = 0x20
-    DISPLAY_DEVICE_DISCONNECT = 0x2000000
-    DISPLAY_DEVICE_REMOTE = 0x4000000
-    DISPLAY_DEVICE_MODESPRUNED = 0x8000000
-
-
-# noinspection PyPep8Naming,PyTypeChecker,SpellCheckingInspection
+# noinspection PyTypeChecker
 class DISPLAY_DEVICE(_Win32BaseStruct):
     """https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-display_devicew
     typedef struct _DISPLAY_DEVICEW {

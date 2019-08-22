@@ -6,6 +6,7 @@ from core.monitor import Monitor
 
 TEXT_DEVICE_NAME = "DEVICE NAME:<br><b>{}</b>"
 TEXT_MONITOR_NAME = "MONITOR NAME:<br><b>{}</b>"
+TEXT_DISPLAY_MONITOR = "DISPLAY MONITOR:<br><b>{}</b>"
 TEXT_SCREEN_RESOLUTION = "SCREEN RESOLUTION:<br><b>{}x{}</b>"
 TEXT_VSCREEN_POSITION = "VIRTUAL SCREEN POSITION:<br><b>({}, {})</b>"
 TEXT_MONITOR_ORIENTATION = "ORIENTATION:<br><b>{}</b>"
@@ -28,6 +29,7 @@ class InfoBox(QGraphicsWidget):
 
         self.device_name = QLabel(self._group_box)
         self.monitor_name = QLabel(self._group_box)
+        self.display_monitor = QLabel(self._group_box)
         self.screen_resolution = QLabel(self._group_box)
         self.vscreen_position = QLabel(self._group_box)
         self.orientation = QLabel(self._group_box)
@@ -35,6 +37,7 @@ class InfoBox(QGraphicsWidget):
 
         self._group_box_layout.addWidget(self.device_name)
         self._group_box_layout.addWidget(self.monitor_name)
+        self._group_box_layout.addWidget(self.display_monitor)
         self._group_box_layout.addWidget(self.screen_resolution)
         self._group_box_layout.addWidget(self.vscreen_position)
         self._group_box_layout.addWidget(self.orientation)
@@ -49,6 +52,8 @@ class InfoBox(QGraphicsWidget):
             TEXT_DEVICE_NAME.format(self.monitor.device_name))
         self.monitor_name.setText(
             TEXT_MONITOR_NAME.format(self.monitor.monitor_name))
+        self.display_monitor.setText(
+            TEXT_DISPLAY_MONITOR.format(self.monitor.display_monitor))
         self.screen_resolution.setText(
             TEXT_SCREEN_RESOLUTION.format(self.monitor.screen_width, self.monitor.screen_height))
         self.vscreen_position.setText(

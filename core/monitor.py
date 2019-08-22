@@ -14,6 +14,7 @@ class DisplayOrientation(enum.Enum):
 class Monitor(HasProperties):
     device_name = WriteOnceProperty(default='')
     monitor_name = Property(default='')
+    display_monitor = Property(default='')
 
     screen_width = Property(default=0)
     screen_height = Property(default=0)
@@ -26,6 +27,7 @@ class Monitor(HasProperties):
     def __init__(self,
                  device_name='',
                  monitor_name='',
+                 display_monitor='',
                  screen_width=0,
                  screen_height=0,
                  position_x=0,
@@ -35,6 +37,7 @@ class Monitor(HasProperties):
         super().__init__()
         self.device_name = device_name
         self.monitor_name = monitor_name
+        self.display_monitor = display_monitor
 
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -53,6 +56,7 @@ class Monitor(HasProperties):
     def __str__(self):
         return f"device_name: '{self.device_name}', " \
             f"monitor_name: '{self.monitor_name}', " \
+            f"display_monitor '{self.display_monitor}', " \
             f"resolution: {self.screen_width}x{self.screen_height}, " \
             f"position: ({self.position_x} | {self.position_y}), " \
             f"orientation: {self.orientation}, " \
