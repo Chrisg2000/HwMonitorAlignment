@@ -41,6 +41,9 @@ class ListModel(Model):
     def empty(self):
         return not self.__list
 
+    def as_list(self):
+        return self.__list
+
     def __len__(self) -> int:
         return len(self.__list)
 

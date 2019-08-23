@@ -1,4 +1,5 @@
 import enum
+from typing import Tuple
 
 from core.has_properties import HasProperties, Property, WriteOnceProperty
 
@@ -52,6 +53,14 @@ class Monitor(HasProperties):
         if self.screen_height == 0:
             raise ValueError("Invalid Monitor defined. Impossible size of height = 0")
         return self.screen_width / self.screen_height
+
+    @property
+    def position(self) -> Tuple[float, float]:
+        return self.position_x, self.position_y
+
+    @property
+    def size(self) -> Tuple[int, int]:
+        return self.screen_width, self.screen_height
 
     def __str__(self):
         return f"device_name: '{self.device_name}', " \

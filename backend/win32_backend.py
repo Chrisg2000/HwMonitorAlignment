@@ -23,6 +23,12 @@ class Win32Backend(BaseMonitorBackend):
         y = GetSystemMetrics(SystemMetricsFlags.YVIRTUALSCREEN)
         return x, y
 
+    def get_monitor_order(self):
+        return sorted(
+            self.monitor_model.as_list(),
+            key=lambda monitor: monitor.position_x
+        )
+
     def _scan_monitors(self):
         path_count, mode_count = GetDisplayConfigBufferSizes(QUERY_DEVICE_CONFIG_FLAGS.ONLY_ACTIVE_PATHS)
         display_paths, display_modes = QueryDisplayConfig(QUERY_DEVICE_CONFIG_FLAGS.ONLY_ACTIVE_PATHS, path_count,

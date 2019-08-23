@@ -12,4 +12,4 @@ class HwMonitorAlignmentApp:
         self.main_window.show()
 
     def finalize(self, exit_code: int):
-        pass
+        self.main_window.finalize()

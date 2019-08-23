@@ -145,3 +145,9 @@ class MonitorOverview(QWidget):
             font_factor = rect.height() / painter.fontMetrics().height()
         font.setPointSizeF(font.pointSizeF() * font_factor)
         painter.setFont(font)
+
+    def hasHeightForWidth(self) -> bool:
+        return True
+
+    def heightForWidth(self, width: int) -> int:
+        return int(width * self.vscreen_ratio * self.__working_area_ratio)
