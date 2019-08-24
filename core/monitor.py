@@ -5,7 +5,7 @@ from core.has_properties import HasProperties, Property, WriteOnceProperty
 
 
 # noinspection SpellCheckingInspection
-class DisplayOrientation(enum.Enum):
+class DisplayOrientation(enum.IntEnum):
     DMDO_DEFAULT = 0
     DMDO_90 = 1
     DMDO_180 = 2

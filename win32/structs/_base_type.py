@@ -1,12 +1,29 @@
 import ctypes
 from ctypes import wintypes
 
+from core.memento import Memento
+
 CCHDEVICENAME = 32
 CCHFORMNAME = 32
 c_enum = ctypes.c_uint32
 
 
-class _Win32BaseStruct(ctypes.Structure):
+class __Memento(Memento):
+    def create_memento(self: ctypes.Structure):
+        return bytes(self)
+
+    def set_memento(self, memento):
+        ctypes.memmove(
+            ctypes.addressof(self),
+            memento,
+            ctypes.sizeof(self))
+
+    @classmethod
+    def from_memento(cls: ctypes.Structure, memento):
+        return cls.from_buffer_copy(memento)
+
+
+class _Win32BaseStruct(__Memento, ctypes.Structure):
     _fields_ = []
 
     def __str__(self):
@@ -15,7 +32,7 @@ class _Win32BaseStruct(ctypes.Structure):
              for field in self._fields_]))
 
 
-class _Win32BaseUnion(ctypes.Union):
+class _Win32BaseUnion(__Memento, ctypes.Union):
     _fields_ = []
 
     def __str__(self):

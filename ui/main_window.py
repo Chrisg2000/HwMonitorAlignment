@@ -3,7 +3,7 @@ from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QGroupBox, QHBo
 
 from align.align_controller import AlignController
 from backend.monitor_backend import BaseMonitorBackend
-from ui.monitor_info_box import MonitorInfoBox
+from ui.common.monitor_info_box import MonitorInfoBox
 from ui.widgets.monitor_overview import MonitorOverview
 
 
@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
         _group = QGroupBox("Setup Information")
         _layout = QHBoxLayout()
 
-        for monitor in self.backend.monitor_model:
+        for monitor in self.backend.get_monitor_order():
             info_box = MonitorInfoBox(monitor, _group)
             _layout.addWidget(info_box)
 
@@ -48,7 +48,6 @@ class MainWindow(QMainWindow):
         _button_box = QDialogButtonBox(Qt.Horizontal)
         _button_box.addButton("Close", QDialogButtonBox.RejectRole).clicked.connect(self._button_close)
         _button_box.addButton("Adjust", QDialogButtonBox.ActionRole).clicked.connect(self._button_adjust)
-        _button_box.addButton("Reset", QDialogButtonBox.ResetRole).clicked.connect(self._button_reset)
 
         return _button_box
 
@@ -57,9 +56,6 @@ class MainWindow(QMainWindow):
 
     def _button_adjust(self, checked=False):
         self.align_controller.start()
-
-    def _button_reset(self, checked=False):
-        pass
 
     def finalize(self):
         if self.align_controller.active:
