@@ -3,7 +3,7 @@ from PySide2.QtGui import QPainter, QPaintEvent, QColor, QLinearGradient, QFont,
 from PySide2.QtWidgets import QWidget
 
 from backend.monitor_backend import BaseMonitorBackend
-from core.monitor import Monitor
+from monitors.monitor import Monitor
 
 
 class MonitorOverview(QWidget):

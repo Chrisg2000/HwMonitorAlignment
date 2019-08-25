@@ -1,6 +1,6 @@
 from PySide2.QtWidgets import QGroupBox, QLabel, QFormLayout
 
-from core.monitor import Monitor, DisplayOrientation
+from monitors.monitor import Monitor, DisplayOrientation
 
 LABEL_DEVICE_NAME = "DEVICE NAME:"
 FMT_DEVICE_NAME = "<b>{}</b>"

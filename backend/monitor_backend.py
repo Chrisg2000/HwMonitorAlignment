@@ -1,14 +1,14 @@
 from abc import ABC
 
 from backend.backend import Backend
-from core.list_model import ListModel
+from monitors.monitor_model import MonitorModel
 from core.signals import Signal
 
 
 class BaseMonitorBackend(Backend, ABC):
 
     def __init__(self):
-        self.__monitor_model = ListModel()
+        self.__monitor_model = MonitorModel()
 
         self.monitor_added = Signal()
         self.monitor_removed = Signal()

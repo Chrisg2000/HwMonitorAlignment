@@ -1,5 +1,5 @@
 from backend.monitor_backend import BaseMonitorBackend
-from core.monitor import Monitor
+from monitors.monitor import Monitor
 from win32.flags import SystemMetricsFlags, MONITORINFO_FLAGS, QUERY_DEVICE_CONFIG_FLAGS, DISPLAYCONFIG_DEVICE_INFO_TYPE
 from win32.func import GetSystemMetrics, GetMonitorInfoEx, EnumDisplaySettings, EnumDisplayDevices, EnumDisplayMonitors, \
     GetDisplayConfigBufferSizes, QueryDisplayConfig, DisplayConfigGetDeviceInfo
@@ -22,12 +22,6 @@ class Win32Backend(BaseMonitorBackend):
         x = GetSystemMetrics(SystemMetricsFlags.XVIRTUALSCREEN)
         y = GetSystemMetrics(SystemMetricsFlags.YVIRTUALSCREEN)
         return x, y
-
-    def get_monitor_order(self):
-        return sorted(
-            self.monitor_model.as_list(),
-            key=lambda monitor: monitor.position_x
-        )
 
     def _scan_monitors(self):
         path_count, mode_count = GetDisplayConfigBufferSizes(QUERY_DEVICE_CONFIG_FLAGS.ONLY_ACTIVE_PATHS)

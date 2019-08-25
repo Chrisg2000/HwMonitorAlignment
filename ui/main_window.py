@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
     def __init__(self, backend: BaseMonitorBackend):
         super().__init__()
         self.setCentralWidget(QWidget())
+        self.setWindowTitle("HwMonitorAlignment")
         self.centralWidget().setLayout(QVBoxLayout())
         self.centralWidget().layout().setContentsMargins(0, 0, 0, 0)
 
@@ -34,10 +35,10 @@ class MainWindow(QMainWindow):
 
     # noinspection PyAttributeOutsideInit
     def setup_monitor_info_group(self):
-        _group = QGroupBox("Setup Information")
+        _group = QGroupBox("Monitor Setup Information")
         _layout = QHBoxLayout()
 
-        for monitor in self.backend.get_monitor_order():
+        for monitor in self.backend.monitor_model.get_monitor_order():
             info_box = MonitorInfoBox(monitor, _group)
             _layout.addWidget(info_box)
 

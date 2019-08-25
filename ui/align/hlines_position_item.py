@@ -2,7 +2,7 @@ from PySide2.QtCore import QRectF
 from PySide2.QtGui import QPainter
 from PySide2.QtWidgets import QGraphicsItem, QStyleOptionGraphicsItem, QWidget
 
-from core.monitor import Monitor
+from monitors.monitor import Monitor
 
 
 class HLinesPositionItem(QGraphicsItem):

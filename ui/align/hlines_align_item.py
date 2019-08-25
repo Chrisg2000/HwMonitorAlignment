@@ -2,7 +2,7 @@ from PySide2.QtCore import QRectF, Qt
 from PySide2.QtGui import QPainter, QPen
 from PySide2.QtWidgets import QGraphicsItem, QStyleOptionGraphicsItem, QWidget
 
-from core.monitor import Monitor
+from monitors.monitor import Monitor
 
 
 class HLinesAlignItem(QGraphicsItem):

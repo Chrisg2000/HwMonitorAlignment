@@ -14,18 +14,18 @@ OPENGL_ACCELERATION = False
 
 class AlignWidget(QGraphicsView):
 
-    def __init__(self, controller):
+    def __init__(self, controller, parent=None):
         """
         :type controller: align.align_controller.AlignController
         """
-        super().__init__()
+        super().__init__(parent)
         self.scale(1, 1)
         self.controller = controller
         self.backend = self.controller.backend
         self.resize(*self.backend.get_vscreen_size())
         self.setViewportMargins(0, 0, 0, 0)
-        self.setWindowFlag(Qt.FramelessWindowHint)
-        self.setWindowFlag(Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.FramelessWindowHint |
+                            Qt.WindowStaysOnTopHint)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
@@ -49,6 +49,16 @@ class AlignWidget(QGraphicsView):
 
         self.setup_monitor()
 
+        #
+        # Adjustment logic
+        #
+
+    def adjust_monitor(self, monitor, direction):
+        pass
+
+    #
+    # Setup UI-Stuff
+    #
     def setup_monitor(self):
         for monitor in self.backend.monitor_model:
             self.create_diagonal_lines(monitor)
@@ -131,6 +141,9 @@ class AlignWidget(QGraphicsView):
         elif name == 'show_cursor_position':
             self.setMouseTracking(value)
 
+    #
+    # Controller pass through's
+    #
     def showEvent(self, event: QShowEvent):
         self.move(*self.backend.get_vscreen_normalize_offset())
         self.resize(*self.backend.get_vscreen_size())

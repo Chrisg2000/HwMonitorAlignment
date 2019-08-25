@@ -1,5 +1,6 @@
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QMouseEvent
+from PySide2.QtWidgets import QMessageBox
 
 from backend.monitor_backend import BaseMonitorBackend
 from core.has_properties import HasProperties, Property
@@ -18,6 +19,7 @@ class AlignController(HasProperties):
     def __init__(self, backend: BaseMonitorBackend):
         super().__init__()
         self.backend = backend
+        self.selected_monitor = None
 
         self.backend.monitor_added.connect(self._monitor_model_changed)
         self.backend.monitor_removed.connect(self._monitor_model_changed)
@@ -39,18 +41,25 @@ class AlignController(HasProperties):
     def key_pressed(self, key):
         if key == Qt.Key_Escape:
             self.stop()
-        elif key == Qt.Key_U:
-            monitor = self.backend.monitor_model.get(0)
-            monitor.monitor_name = 'ABC'
+        elif key == Qt.Key_Up:
+            self._widget_adjust(0)
 
     def mouse_pressed(self, event: QMouseEvent):
-        for monitor in self.backend.monitor_model:
-            pos = event.globalPos()
-            if monitor.position_x < pos.x() < monitor.position_x + monitor.screen_width \
-                    and monitor.position_y < pos.y() < monitor.position_y + monitor.screen_height:
-                print(monitor)
+        pos = event.globalPos()
+        self.selected_monitor = self.backend.monitor_model.get_from_position(pos.x(), pos.y())
 
     def _monitor_model_changed(self, *args):
         if self.active:
             self.stop(True)
             self.start()
+
+    def _widget_adjust(self, direction):
+        if self.selected_monitor is None:
+            message_box = QMessageBox(QMessageBox.Information,
+                                      "Monitor selection error",
+                                      "There is no monitor selected. To select an monitor move your "
+                                      "cursor to the desired monitor and press left-mouse button.")
+            message_box.setWindowFlag(Qt.WindowStaysOnTopHint)
+            message_box.exec_()
+            return
+        self._widget.adjust_monitor(self.selected_monitor, direction)

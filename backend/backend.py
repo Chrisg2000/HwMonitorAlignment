@@ -17,11 +17,3 @@ class Backend:
 
         The virtual screen is the bounding rectangle of all display monitors.
         """
-
-    @abstractmethod
-    def get_monitor_order(self) -> Iterator[Any]:
-        """Yields the display monitors in order on the virtual screen
-        from left to right.
-
-        The virtual screen is the bounding rectangle of all display monitors.
-        """
