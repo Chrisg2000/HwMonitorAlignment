@@ -20,3 +20,7 @@ class GraphicsWidget(QGraphicsWidget):
 
     def geometry(self) -> QRectF:
         return self._widget.geometry()
+
+    @property
+    def widget(self):
+        return self._widget

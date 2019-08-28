@@ -29,7 +29,7 @@ def label_orientation(orientation: DisplayOrientation):
     elif orientation == DisplayOrientation.DMDO_270:
         return 'Portrait (flipped)'
     else:
-        return 'Unknown orientation'
+        raise ValueError("orientation needs to be a DisplayOrientation")
 
 
 def format_proxy(fmt: str, orientation=False):
@@ -50,7 +50,8 @@ class MonitorInfoBox(QGroupBox):
 
         self.monitor = monitor
         self.monitor.property_changed.connect(self._update_property)
-        self.setTitle(f"Display Information {'*' if monitor.primary else ''}")
+        self._selected = False
+        self.setTitle(f"Display Information {'*' if self._selected else ''}")
         self._layout = QFormLayout()
         self._layout.setRowWrapPolicy(QFormLayout.WrapAllRows)
 
@@ -86,6 +87,15 @@ class MonitorInfoBox(QGroupBox):
         self._layout.addRow(LABEL_MONITOR_PRIMARY, self.primary)
 
         self.setLayout(self._layout)
+
+    @property
+    def selected(self):
+        return self._selected
+
+    @selected.setter
+    def selected(self, value):
+        self._selected = value
+        self.setTitle(f"Display Information {'*' if self.selected else ''}")
 
     def _update_property(self, instance, name, value):
         attr, fmt, label = self.mapper[name]

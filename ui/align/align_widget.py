@@ -2,6 +2,7 @@ from PySide2.QtGui import Qt, QKeyEvent, QPainter, QShowEvent, QMouseEvent
 from PySide2.QtOpenGL import QGLWidget, QGLFormat, QGL
 from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsLineItem, QToolTip
 
+from align import AdjustDirection
 from ui.align.hlines_align_item import HLinesAlignItem
 from ui.align.hlines_position_item import HLinesPositionItem
 from ui.common.control_box import ControlBox
@@ -24,8 +25,7 @@ class AlignWidget(QGraphicsView):
         self.backend = self.controller.backend
         self.resize(*self.backend.get_vscreen_size())
         self.setViewportMargins(0, 0, 0, 0)
-        self.setWindowFlags(Qt.FramelessWindowHint |
-                            Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.FramelessWindowHint)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
@@ -42,6 +42,8 @@ class AlignWidget(QGraphicsView):
 
         self.controller.property_changed.connect(self._controller_property_changed)
 
+        self._selected_widget: MonitorInfoBox = None
+
         self.dlines_layer = GraphicsLayer(visible=self.controller.show_diagonal_lines)
         self.hlines_layer = GraphicsLayer(visible=self.controller.show_alignment_lines)
         self.hlines_position_layer = GraphicsLayer(visible=self.controller.show_line_positions)
@@ -49,12 +51,12 @@ class AlignWidget(QGraphicsView):
 
         self.setup_monitor()
 
-        #
-        # Adjustment logic
-        #
+    #
+    # Adjustment logic
+    #
 
-    def adjust_monitor(self, monitor, direction):
-        pass
+    def adjust_monitor(self, monitor, direction: AdjustDirection):
+        print(self.hlines_layer[monitor])
 
     #
     # Setup UI-Stuff
@@ -96,7 +98,7 @@ class AlignWidget(QGraphicsView):
         proxy_info_box.setZValue(99)
         self.graphics_scene.addItem(proxy_info_box)
 
-        self.info_box_layer.add_to_layer(proxy_info_box)
+        self.info_box_layer.add_to_layer(proxy_info_box, key=monitor)
         return proxy_info_box
 
     def create_diagonal_lines(self, monitor):
@@ -111,23 +113,23 @@ class AlignWidget(QGraphicsView):
         self.graphics_scene.addItem(left_top_right_bottom)
         self.graphics_scene.addItem(right_top_left_bottom)
 
-        self.dlines_layer.add_to_layer(left_top_right_bottom)
-        self.dlines_layer.add_to_layer(right_top_left_bottom)
+        self.dlines_layer.add_to_layer(left_top_right_bottom, key=monitor)
+        self.dlines_layer.add_to_layer(right_top_left_bottom, key=monitor)
         return left_top_right_bottom, right_top_left_bottom
 
     def create_hlines(self, monitor):
         grid = HLinesAlignItem(monitor, 100)
         self.graphics_scene.addItem(grid)
 
-        self.hlines_layer.add_to_layer(grid)
+        self.hlines_layer.add_to_layer(grid, key=monitor)
         return grid
 
     def create_hlines_position(self, monitor):
-        grid = HLinesPositionItem(monitor, 100)
-        self.graphics_scene.addItem(grid)
+        hlines_positions = HLinesPositionItem(monitor, 100)
+        self.graphics_scene.addItem(hlines_positions)
 
-        self.hlines_position_layer.add_to_layer(grid)
-        return grid
+        self.hlines_position_layer.add_to_layer(hlines_positions, key=monitor)
+        return hlines_positions
 
     def _controller_property_changed(self, instance, name, value):
         if name == 'show_diagonal_lines':
@@ -140,6 +142,11 @@ class AlignWidget(QGraphicsView):
             self.hlines_position_layer.set_visible(value)
         elif name == 'show_cursor_position':
             self.setMouseTracking(value)
+        elif name == 'selected_monitor':
+            if self._selected_widget:
+                self._selected_widget.selected = False
+            self._selected_widget = self.info_box_layer[value].widget
+            self._selected_widget.selected = True
 
     #
     # Controller pass through's

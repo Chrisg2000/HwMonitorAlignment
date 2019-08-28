@@ -2,6 +2,7 @@ from PySide2.QtCore import Qt
 from PySide2.QtGui import QMouseEvent
 from PySide2.QtWidgets import QMessageBox
 
+from align import AdjustDirection
 from backend.monitor_backend import BaseMonitorBackend
 from core.has_properties import HasProperties, Property
 from ui.align.align_widget import AlignWidget
@@ -15,11 +16,11 @@ class AlignController(HasProperties):
     show_line_positions = Property(default=False)
     show_info_box = Property(default=True)
     show_circles = Property(default=False)
+    selected_monitor = Property(default=None)
 
     def __init__(self, backend: BaseMonitorBackend):
         super().__init__()
         self.backend = backend
-        self.selected_monitor = None
 
         self.backend.monitor_added.connect(self._monitor_model_changed)
         self.backend.monitor_removed.connect(self._monitor_model_changed)
@@ -42,7 +43,9 @@ class AlignController(HasProperties):
         if key == Qt.Key_Escape:
             self.stop()
         elif key == Qt.Key_Up:
-            self._widget_adjust(0)
+            self._widget_adjust(AdjustDirection.UP)
+        elif key == Qt.Key_Down:
+            self._widget_adjust(AdjustDirection.DOWN)
 
     def mouse_pressed(self, event: QMouseEvent):
         pos = event.globalPos()
