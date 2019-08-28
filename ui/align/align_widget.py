@@ -1,4 +1,4 @@
-from PySide2.QtGui import Qt, QKeyEvent, QPainter, QShowEvent, QMouseEvent
+from PySide2.QtGui import Qt, QKeyEvent, QPainter, QShowEvent, QMouseEvent, QWheelEvent
 from PySide2.QtOpenGL import QGLWidget, QGLFormat, QGL
 from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsLineItem, QToolTip
 
@@ -56,7 +56,7 @@ class AlignWidget(QGraphicsView):
     #
 
     def adjust_monitor(self, monitor, direction: AdjustDirection):
-        print(self.hlines_layer[monitor])
+        hlines: HLinesAlignItem = self.hlines_layer[monitor]
 
     #
     # Setup UI-Stuff
@@ -158,7 +158,6 @@ class AlignWidget(QGraphicsView):
 
     def keyPressEvent(self, event: QKeyEvent):
         self.controller.key_pressed(event.key())
-        super().keyPressEvent(event)
 
     def mouseMoveEvent(self, event: QMouseEvent):
         if self.controller.show_cursor_position:
@@ -170,3 +169,6 @@ class AlignWidget(QGraphicsView):
     def mousePressEvent(self, event: QMouseEvent):
         self.controller.mouse_pressed(event)
         super().mousePressEvent(event)
+
+    def wheelEvent(self, event: QWheelEvent):
+        pass
