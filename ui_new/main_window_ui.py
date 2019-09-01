@@ -2,7 +2,7 @@ from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QGroupBox, QHBoxLayout, QDialogButtonBox
 
 from backend.monitor_backend import BaseMonitorBackend
-from ui_new.common.monitor_info_box import MonitorInfoBox
+from ui_new.common.monitor_info_box_ui import UiMonitorInfoBox
 from ui_new.widgets.monitor_overview import MonitorOverview
 
 
@@ -29,7 +29,8 @@ class UiMainWindow:
         self.monitor_info_group.setLayout(QHBoxLayout())
 
         for monitor in self.backend.monitor_model.get_monitor_order():
-            info_box = MonitorInfoBox(monitor, self.monitor_info_group)
+            info_box = QGroupBox("Monitor Information")
+            info_box.ui = UiMonitorInfoBox(info_box, monitor)
             self.monitor_info_group.layout().addWidget(info_box)
         self.sub_layout.addWidget(self.monitor_info_group)
 

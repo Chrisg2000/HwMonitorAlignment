@@ -1,4 +1,5 @@
-from PySide2.QtWidgets import QGraphicsView
+from PySide2.QtGui import QKeyEvent, QWheelEvent
+from PySide2.QtWidgets import QGraphicsView, QDialogButtonBox
 
 from ui_new.align.align_widget_ui import UiAlignWidget
 
@@ -20,8 +21,22 @@ class AlignWidget(QGraphicsView):
         self.controller = controller
 
         self.ui = UiAlignWidget(self, self.model, self.monitor)
+        if self.monitor.primary:
+            # Control Box Buttons
+            self.ui.control_box.ui.button_box.button(QDialogButtonBox.Apply).clicked.connect(
+                self.controller.button_apply)
+            self.ui.control_box.ui.button_box.button(QDialogButtonBox.Close).clicked.connect(
+                self.controller.button_close)
+            self.ui.control_box.ui.button_box.button(QDialogButtonBox.Reset).clicked.connect(
+                self.controller.button_reset)
 
         self.move(self.monitor.position_x,
                   self.monitor.position_y)
         self.resize(self.monitor.screen_width,
                     self.monitor.screen_height)
+
+    def keyPressEvent(self, event: QKeyEvent):
+        self.controller.key_pressed(self.monitor, event.key())
+
+    def wheelEvent(self, event: QWheelEvent):
+        self.controller.wheel_event(self.monitor, event)
