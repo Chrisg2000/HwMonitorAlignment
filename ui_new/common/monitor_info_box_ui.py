@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QGroupBox, QLabel, QFormLayout
+from PySide2.QtWidgets import QLabel, QFormLayout
 
 from monitors.monitor import DisplayOrientation
 
@@ -25,6 +25,17 @@ def label_orientation(orientation: DisplayOrientation):
         raise ValueError("orientation needs to be a DisplayOrientation")
 
 
+def format_proxy(fmt: str, orientation=False):
+    def wrapped(value):
+        if type(value) == tuple:
+            return fmt.format(*value)
+        if orientation:
+            value = label_orientation(value)
+        return fmt.format(value)
+
+    return wrapped
+
+
 class UiMonitorInfoBox:
 
     def __init__(self, view, monitor):
@@ -35,18 +46,32 @@ class UiMonitorInfoBox:
         """
 
         self.monitor = monitor
+        self.monitor.property_changed.connect(self._update_property)
         self._layout = QFormLayout()
         self._layout.setRowWrapPolicy(QFormLayout.WrapAllRows)
 
-        self.device_name = self._property_label(('device_name',), 'device_name', FMT_DEVICE_NAME, view)
-        self.monitor_name = self._property_label(('monitor_name',), 'monitor_name', FMT_MONITOR_NAME, view)
-        self.display_monitor = self._property_label(('display_monitor',), 'display_monitor', FMT_DISPLAY_MONITOR, view)
-        self.screen_resolution = self._property_label(('screen_width', 'screen_height')
-                                                      , 'size', FMT_SCREEN_RESOLUTION, view)
-        self.vscreen_position = self._property_label(('position_x', 'position_y'),
-                                                     'position', FMT_VSCREEN_POSITION, view)
-        self.orientation = self._property_label(('orientation',), 'orientation', FMT_MONITOR_ORIENTATION, view, True)
-        self.primary = self._property_label(('primary',), 'primary', FMT_MONITOR_PRIMARY, view)
+        self.device_name = QLabel(view)
+        self.monitor_name = QLabel(view)
+        self.display_monitor = QLabel(view)
+        self.screen_resolution = QLabel(view)
+        self.vscreen_position = QLabel(view)
+        self.orientation = QLabel(view)
+        self.primary = QLabel(view)
+
+        self.mapper = {
+            'device_name': ('device_name', format_proxy(FMT_DEVICE_NAME), self.device_name),
+            'monitor_name': ('monitor_name', format_proxy(FMT_MONITOR_NAME), self.monitor_name),
+            'display_monitor': ('display_monitor', format_proxy(FMT_DISPLAY_MONITOR), self.display_monitor),
+            'screen_width': ('size', format_proxy(FMT_SCREEN_RESOLUTION), self.screen_resolution),
+            'screen_height': ('size', format_proxy(FMT_SCREEN_RESOLUTION), self.screen_resolution),
+            'position_x': ('position', format_proxy(FMT_VSCREEN_POSITION), self.vscreen_position),
+            'position_y': ('position', format_proxy(FMT_VSCREEN_POSITION), self.vscreen_position),
+            'orientation': ('orientation', format_proxy(FMT_MONITOR_ORIENTATION, orientation=True), self.orientation),
+            'primary': ('primary', format_proxy(FMT_MONITOR_PRIMARY), self.primary),
+        }
+
+        for (attr, fmt, label) in self.mapper.values():
+            label.setText(fmt(getattr(self.monitor, attr)))
 
         self._layout.addRow("DEVICE NAME:", self.device_name)
         self._layout.addRow("MONITOR NAME:", self.monitor_name)
@@ -58,27 +83,6 @@ class UiMonitorInfoBox:
 
         view.setLayout(self._layout)
 
-    def _property_label(self, property_name, func, fmt, parent=None, orientation=False):
-        """
-        :param tuple property_name: Container of property names in monitor model
-        :param str func: Name of property to use to display
-        :param str fmt: Format string for property
-        :param parent: QLabel parent
-        :param orientation: Is Label for orientation
-        """
-        label = QLabel(parent)
-
-        def wrapped(value):
-            attr = getattr(self.monitor, func)
-            if type(attr) == tuple:
-                text = fmt.format(*attr)
-            elif orientation:
-                text = fmt.format(label_orientation(attr))
-            else:
-                text = fmt.format(attr)
-            label.setText(text)
-
-        for name in property_name:
-            self.monitor.changed(name).connect(wrapped)
-        wrapped(None)
-        return label
+    def _update_property(self, instance, name, value):
+        attr, fmt, label = self.mapper[name]
+        label.setText(fmt(getattr(self.monitor, attr)))

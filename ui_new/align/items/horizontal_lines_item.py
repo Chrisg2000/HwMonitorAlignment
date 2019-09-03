@@ -7,7 +7,7 @@ class HorizontalLinesItem(QGraphicsItem):
 
     def __init__(self, model, monitor):
         """
-        :type model: ui_new.align.align_widget_model.AlignWidgetModel
+        :type model: ui_new.align.align_widget_model.AlignWidgetViewModel
         :type monitor: monitors.monitor.Monitor
         """
         super().__init__()
@@ -45,5 +45,7 @@ class HorizontalLinesItem(QGraphicsItem):
         self.update(self.boundingRect())
 
     def setY(self, y: float):
-        super().setY(y * 10)
-        # super().setY(y)
+        pos = self.pos()
+        pos.setY(y)
+        self.setPos(pos)
+        self.update(self.boundingRect())

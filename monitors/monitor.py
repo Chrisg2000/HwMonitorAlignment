@@ -2,6 +2,7 @@ import enum
 from typing import Tuple
 
 from core.has_properties import HasProperties, Property, WriteOnceProperty
+from core.memento import Memento
 
 
 # noinspection SpellCheckingInspection
@@ -12,7 +13,7 @@ class DisplayOrientation(enum.IntEnum):
     DMDO_270 = 3
 
 
-class Monitor(HasProperties):
+class Monitor(HasProperties, Memento):
     device_name = WriteOnceProperty(default='')
     monitor_name = Property(default='')
     display_monitor = Property(default='')
@@ -62,11 +63,39 @@ class Monitor(HasProperties):
     def size(self) -> Tuple[int, int]:
         return self.screen_width, self.screen_height
 
+    def create_memento(self):
+        return (self.device_name,
+                self.monitor_name,
+                self.display_monitor,
+                self.screen_width,
+                self.screen_height,
+                self.position_x,
+                self.position_y,
+                self.orientation,
+                self.primary)
+
+    def set_memento(self, memento):
+        (self.device_name,
+         self.monitor_name,
+         self.display_monitor,
+         self.screen_width,
+         self.screen_height,
+         self.position_x,
+         self.position_y,
+         self.orientation,
+         self.primary) = memento
+
+    @classmethod
+    def from_memento(cls, memento):
+        monitor = Monitor()
+        monitor.set_memento(memento)
+        return monitor
+
     def __str__(self):
         return f"device_name: '{self.device_name}', " \
-            f"monitor_name: '{self.monitor_name}', " \
-            f"display_monitor '{self.display_monitor}', " \
-            f"resolution: {self.screen_width}x{self.screen_height}, " \
-            f"position: ({self.position_x} | {self.position_y}), " \
-            f"orientation: {self.orientation}, " \
-            f"primary: {self.primary}"
+               f"monitor_name: '{self.monitor_name}', " \
+               f"display_monitor '{self.display_monitor}', " \
+               f"resolution: {self.screen_width}x{self.screen_height}, " \
+               f"position: ({self.position_x} | {self.position_y}), " \
+               f"orientation: {self.orientation}, " \
+               f"primary: {self.primary}"

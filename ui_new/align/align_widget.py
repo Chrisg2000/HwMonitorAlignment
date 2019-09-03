@@ -12,7 +12,7 @@ class AlignWidget(QGraphicsView):
         The model and controller is shared among all other widgets on the different monitors
 
         :type controller: ui_new.align.align_controller.AlignController
-        :type model: ui_new.align.align_widget_model.AlignWidgetModel
+        :type model: ui_new.align.align_widget_model.AlignWidgetViewModel
         :type monitor: monitors.monitor.Monitor
         """
         super().__init__(parent)
@@ -36,7 +36,8 @@ class AlignWidget(QGraphicsView):
                     self.monitor.screen_height)
 
     def keyPressEvent(self, event: QKeyEvent):
-        self.controller.key_pressed(self.monitor, event.key())
+        if self.controller.key_pressed(self.monitor, event.key()):
+            super().keyPressEvent(event)
 
     def wheelEvent(self, event: QWheelEvent):
         self.controller.wheel_event(self.monitor, event)

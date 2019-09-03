@@ -2,7 +2,7 @@ from backend.monitor_backend import BaseMonitorBackend
 from core.has_properties import HasProperties, Property
 
 
-class AlignWidgetModel(HasProperties):
+class AlignWidgetViewModel(HasProperties):
     show_diagonal_lines = Property(default=False)
     show_horizontal_lines = Property(default=True)
     show_info_box = Property(default=True)

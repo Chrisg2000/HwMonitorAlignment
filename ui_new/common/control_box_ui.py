@@ -8,7 +8,7 @@ class UiControlBox:
         """Align Widget Control Box Ui
 
         :type view: PySide2.QtWidgets.QWidget.QWidget
-        :type model: ui_new.align.align_widget_model.AlignWidgetModel
+        :type model: ui_new.align.align_widget_model.AlignWidgetViewModel
         """
         self.model = model
         self._layout = QHBoxLayout()

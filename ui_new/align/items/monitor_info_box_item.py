@@ -6,9 +6,9 @@ from ui_new.graphics.graphics_window import GraphicsWindow
 
 class MonitorInfoBoxItem(GraphicsWindow):
 
-    def __init__(self, monitor, parent=None):
+    def __init__(self, monitor, text='Display Information', parent=None):
         self.monitor = monitor
         self.widget = QWidget()
         self.ui = UiMonitorInfoBox(self.widget, self.monitor)
 
-        super().__init__(self.widget, 'Display Information', 0, parent)
+        super().__init__(self.widget, text, 0, parent)

@@ -1,9 +1,7 @@
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QWidget
 
-from core.signals import Signal
 from ui_new.align.align_widget import AlignWidget
-from ui_new.align.align_widget_model import AlignWidgetModel
+from ui_new.align.models.view_model import AlignWidgetViewModel
 
 
 class AlignController:
@@ -14,11 +12,27 @@ class AlignController:
         The internal model and controller is shared among all other
         widgets on the different monitors
 
+                                Controller
+            ┌─────────────   modifies models    <────────────┐
+            │             and common properties              │ common
+         ViewModel         │                                 │ properties
+        common UI  ───┐    │                                 │ change
+        properties    │    │                                 │ or general
+                      ├──> ├────>   Model  ────────>  View ──┤ settings
+                      │    │                                 │
+                      ├──> ├────>   Model  ────────>  View ──┤
+                      │    │                                 │
+                      └──> └────>   Model  ────────>  View ──┘
+                                 specific UI        displays
+                                properties and      specific
+                                     data            data
+
+
         :type backend: backend.monitor_backend.BaseMonitorBackend
         """
         self.map = {}
         self.backend = backend
-        self.model = AlignWidgetModel(self.backend)
+        self.model = AlignWidgetViewModel(self.backend)
 
     def key_pressed(self, monitor, key):
         if key == Qt.Key_Escape:
@@ -27,6 +41,11 @@ class AlignController:
             monitor.position_y -= 1
         elif key == Qt.Key_Down:
             monitor.position_y += 1
+        elif key == Qt.Key_M:
+            monitor.monitor_name = 'Psst'
+            print(monitor.monitor_name)
+        else:
+            return True
 
     def wheel_event(self, monitor, event):
         pass

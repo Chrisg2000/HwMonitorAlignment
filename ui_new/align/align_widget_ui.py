@@ -14,7 +14,7 @@ class UiAlignWidget:
         """UI for AlignWidgets
 
         :type view: PySide2.QtWidgets.QGraphicsView.QGraphicsView
-        :type model: ui_new.align.align_widget_model.AlignWidgetModel
+        :type model: ui_new.align.align_widget_model.AlignWidgetViewModel
         :type monitor: monitors.monitor.Monitor
         """
         self.view = view
