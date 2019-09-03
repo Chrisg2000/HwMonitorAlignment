@@ -1,7 +1,8 @@
 from PySide2.QtCore import Qt
 
 from ui_new.align.align_widget import AlignWidget
-from ui_new.align.models.view_model import AlignWidgetViewModel
+from ui_new.align.models.align_model import AlignModel
+from ui_new.align.models.view_model import AlignViewModel
 
 
 class AlignController:
@@ -32,7 +33,8 @@ class AlignController:
         """
         self.map = {}
         self.backend = backend
-        self.model = AlignWidgetViewModel(self.backend)
+        self.common_model = AlignViewModel()
+        self.monitor_model = self.backend.monitor_model
 
     def key_pressed(self, monitor, key):
         if key == Qt.Key_Escape:
@@ -51,14 +53,15 @@ class AlignController:
         pass
 
     def start(self):
-        for monitor in self.backend.monitor_model:
-            widget = AlignWidget(self, self.model, monitor)
+        for monitor in self.monitor_model:
+            model = AlignModel(monitor, self.common_model, self.backend)
+            widget = AlignWidget(self, model)
             widget.showFullScreen()
 
-            self.map[monitor] = widget
+            self.map[monitor] = (model, widget)
 
     def stop(self):
-        for widget in self.map.values():
+        for _, widget in self.map.values():
             widget.close()
         self.map.clear()
 
@@ -72,4 +75,5 @@ class AlignController:
 
     def button_reset(self, checked=False):
         """Align Widget Control Box Dialog Buttons Reset"""
-        pass
+        for model, _ in self.map.values():
+            model.rollback()

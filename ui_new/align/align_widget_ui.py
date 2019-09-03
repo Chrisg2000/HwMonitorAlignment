@@ -10,20 +10,18 @@ from ui_new.graphics.graphics_layer import GraphicsLayer
 
 class UiAlignWidget:
 
-    def __init__(self, view, model, monitor):
+    def __init__(self, view, model):
         """UI for AlignWidgets
 
         :type view: PySide2.QtWidgets.QGraphicsView.QGraphicsView
-        :type model: ui_new.align.align_widget_model.AlignWidgetViewModel
-        :type monitor: monitors.monitor.Monitor
+        :type model: ui_new.align.models.align_model.AlignModel
         """
         self.view = view
         self.model = model
-        self.monitor = monitor
 
         view.scale(1, 1)
         view.setWindowFlags(Qt.Tool)
-        view.setStyleSheet('border: 0px')
+        view.setStyleSheet('border: 0px; background-color: white')
         view.setViewportMargins(0, 0, 0, 0)
         view.setContentsMargins(0, 0, 0, 0)
         view.resize(*self.model.vscreen_size)
@@ -35,25 +33,25 @@ class UiAlignWidget:
         view.setOptimizationFlag(QGraphicsView.DontAdjustForAntialiasing)
 
         self.graphics_scene = QGraphicsScene(view)
-        view.setSceneRect(QRectF(0, 0, self.monitor.screen_width, self.monitor.screen_height))
+        view.setSceneRect(QRectF(0, 0, self.model.monitor.screen_width, self.model.monitor.screen_height))
 
-        self.diagonal_lines_layer = GraphicsLayer(visible=self.model.show_diagonal_lines, level=1)
-        self.horizontal_lines_layer = GraphicsLayer(visible=self.model.show_horizontal_lines, level=2)
-        self.info_box_layer = GraphicsLayer(visible=self.model.show_info_box, level=3)
+        self.diagonal_lines_layer = GraphicsLayer(visible=self.model.common_model.show_diagonal_lines, level=1)
+        self.horizontal_lines_layer = GraphicsLayer(visible=self.model.common_model.show_horizontal_lines, level=2)
+        self.info_box_layer = GraphicsLayer(visible=self.model.common_model.show_info_box, level=3)
         self.control_box_layer = GraphicsLayer(level=4)
 
-        self.model.changed("show_diagonal_lines").connect(self.diagonal_lines_layer.set_visible)
-        self.model.changed("show_horizontal_lines").connect(self.horizontal_lines_layer.set_visible)
-        self.model.changed("show_info_box").connect(self.info_box_layer.set_visible)
+        self.model.common_model.changed("show_diagonal_lines").connect(self.diagonal_lines_layer.set_visible)
+        self.model.common_model.changed("show_horizontal_lines").connect(self.horizontal_lines_layer.set_visible)
+        self.model.common_model.changed("show_info_box").connect(self.info_box_layer.set_visible)
 
-        self.info_box = MonitorInfoBoxItem(self.monitor)
-        self.control_box = ControlBoxItem(self.model)
-        self.horizontal_lines = HorizontalLinesItem(self.model, self.monitor)
+        self.info_box = MonitorInfoBoxItem(self.model.monitor)
+        self.control_box = ControlBoxItem(self.model.common_model)
+        self.horizontal_lines = HorizontalLinesItem(self.model)
 
         self.create_diagonal_lines()
         self.create_info_box()
         self.create_horizontal_lines()
-        if monitor.primary:
+        if self.model.monitor.primary:
             self.create_control_box()
         self.arrange_items()
 
@@ -61,9 +59,9 @@ class UiAlignWidget:
 
     def create_diagonal_lines(self):
         left_top_right_bottom = QGraphicsLineItem(0, 0,
-                                                  self.monitor.screen_width, self.monitor.screen_height)
-        right_top_left_bottom = QGraphicsLineItem(self.monitor.screen_width, 0,
-                                                  0, self.monitor.screen_height)
+                                                  self.model.monitor.screen_width, self.model.monitor.screen_height)
+        right_top_left_bottom = QGraphicsLineItem(self.model.monitor.screen_width, 0,
+                                                  0, self.model.monitor.screen_height)
 
         self.diagonal_lines_layer.add_to_layer(left_top_right_bottom)
         self.diagonal_lines_layer.add_to_layer(right_top_left_bottom)
@@ -89,7 +87,7 @@ class UiAlignWidget:
         but I didn't find any way now. So keep it like this as long you dont find a better solution
         """
         info_box_size = self.info_box.windowFrameRect().toRect().size()
-        if self.monitor.primary:
+        if self.model.monitor.primary:
             info_box_margin = self.info_box.getWindowFrameMargins()
             control_box_size = self.control_box.windowFrameRect().toRect().size()
             control_box_margin = self.control_box.getWindowFrameMargins()
@@ -101,8 +99,8 @@ class UiAlignWidget:
                     info_box_size,
                     control_box_size),
                 QRect(0, 0,
-                      self.monitor.screen_width,
-                      self.monitor.screen_height)
+                      self.model.monitor.screen_width,
+                      self.model.monitor.screen_height)
             )
             self.info_box.setPos(rect.left() + info_box_margin[0],
                                  rect.top() + info_box_margin[1])
@@ -116,8 +114,8 @@ class UiAlignWidget:
                     Qt.AlignCenter,
                     self.info_box.size().toSize(),
                     QRect(0, 0,
-                          self.monitor.screen_width,
-                          self.monitor.screen_height)
+                          self.model.monitor.screen_width,
+                          self.model.monitor.screen_height)
                 )
             )
 
