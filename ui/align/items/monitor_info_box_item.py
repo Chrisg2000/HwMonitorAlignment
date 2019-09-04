@@ -1,7 +1,7 @@
 from PySide2.QtWidgets import QWidget
 
-from ui_new.common.monitor_info_box_ui import UiMonitorInfoBox
-from ui_new.graphics.graphics_window import GraphicsWindow
+from ui.common.monitor_info_box_ui import UiMonitorInfoBox
+from ui.graphics.graphics_window import GraphicsWindow
 
 
 class MonitorInfoBoxItem(GraphicsWindow):

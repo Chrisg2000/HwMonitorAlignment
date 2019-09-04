@@ -8,20 +8,24 @@ class UiControlBox:
         """Align Widget Control Box Ui
 
         :type view: PySide2.QtWidgets.QWidget.QWidget
-        :type model: ui_new.align.models.view_model.AlignViewModel
+        :type model: ui.align.models.view_model.AlignViewModel
         """
         self.model = model
         self._layout = QHBoxLayout()
         self._form_layout = QFormLayout()
 
+        self.show_cursor_position = self._property_checkbox("show_cursor_position", view)
         self.show_diagonal_lines = self._property_checkbox("show_diagonal_lines", view)
         self.show_horizontal_lines = self._property_checkbox("show_horizontal_lines", view)
+        self.show_horizontal_text = self._property_checkbox("show_horizontal_text", view)
         self.line_spacing = self._property_spinbox("line_spacing", (50, 1920 // 2), view)
         self.line_thickness = self._property_spinbox("line_thickness", (0, 100), view)
         self.show_info_box = self._property_checkbox("show_info_box", view)
 
+        self._form_layout.addRow("Show cursor position", self.show_cursor_position)
         self._form_layout.addRow("Show diagonal lines", self.show_diagonal_lines)
         self._form_layout.addRow("Show horizontal lines", self.show_horizontal_lines)
+        self._form_layout.addRow("Show horizontal text", self.show_horizontal_text)
         self._form_layout.addRow("Line spacing", self.line_spacing)
         self._form_layout.addRow("Line thickness", self.line_thickness)
         self._form_layout.addRow("Show info box", self.show_info_box)

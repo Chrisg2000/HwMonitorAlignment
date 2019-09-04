@@ -2,10 +2,10 @@ from PySide2.QtCore import Qt, QRectF, QRect, QSize
 from PySide2.QtGui import QPainter
 from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsLineItem, QStyle
 
-from ui_new.align.items.control_box_item import ControlBoxItem
-from ui_new.align.items.horizontal_lines_item import HorizontalLinesItem
-from ui_new.align.items.monitor_info_box_item import MonitorInfoBoxItem
-from ui_new.graphics.graphics_layer import GraphicsLayer
+from ui.align.items.control_box_item import ControlBoxItem
+from ui.align.items.horizontal_lines_item import HorizontalLinesItem
+from ui.align.items.monitor_info_box_item import MonitorInfoBoxItem
+from ui.graphics.graphics_layer import GraphicsLayer
 
 
 class UiAlignWidget:
@@ -14,7 +14,7 @@ class UiAlignWidget:
         """UI for AlignWidgets
 
         :type view: PySide2.QtWidgets.QGraphicsView.QGraphicsView
-        :type model: ui_new.align.models.align_model.AlignModel
+        :type model: ui.align.models.align_model.AlignModel
         """
         self.view = view
         self.model = model

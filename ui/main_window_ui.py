@@ -2,8 +2,8 @@ from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QGroupBox, QHBoxLayout, QDialogButtonBox
 
 from backend.monitor_backend import BaseMonitorBackend
-from ui_new.common.monitor_info_box_ui import UiMonitorInfoBox
-from ui_new.widgets.monitor_overview import MonitorOverview
+from ui.common.monitor_info_box_ui import UiMonitorInfoBox
+from ui.widgets.monitor_overview import MonitorOverview
 
 
 class UiMainWindow:

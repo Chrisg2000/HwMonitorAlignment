@@ -1,7 +1,7 @@
 from backend.monitor_backend import BaseMonitorBackend
 from core.has_properties import HasProperties, Property
 from monitors.monitor import Monitor
-from ui_new.align.models.view_model import AlignViewModel
+from ui.align.models.view_model import AlignViewModel
 
 
 class AlignModel(HasProperties):

@@ -43,7 +43,7 @@ class UiMonitorInfoBox:
 
         :type view: PySide2.QtWidgets.QWidget.QWidget
         :type monitor: monitors.monitor.Monitor
-        :type model: ui_new.align.models.align_model.AlignModel
+        :type model: ui.align.models.align_model.AlignModel
         """
         self.monitor = monitor
         self.monitor.property_changed.connect(self._update_property)

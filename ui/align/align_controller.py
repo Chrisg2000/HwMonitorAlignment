@@ -1,8 +1,10 @@
 from PySide2.QtCore import Qt
+from PySide2.QtGui import QMouseEvent
+from PySide2.QtWidgets import QToolTip
 
-from ui_new.align.align_widget import AlignWidget
-from ui_new.align.models.align_model import AlignModel
-from ui_new.align.models.view_model import AlignViewModel
+from ui.align.align_widget import AlignWidget
+from ui.align.models.align_model import AlignModel
+from ui.align.models.view_model import AlignViewModel
 
 
 class AlignController:
@@ -39,18 +41,21 @@ class AlignController:
     def key_pressed(self, model: AlignModel, key):
         if key == Qt.Key_Escape:
             self.stop()
-        elif key == Qt.Key_Up:
+        elif key == Qt.Key_Up and not model.monitor.primary:
             model.offset -= 1
-        elif key == Qt.Key_Down:
+        elif key == Qt.Key_Down and not model.monitor.primary:
             model.offset += 1
-        elif key == Qt.Key_M:
-            model.monitor.monitor_name = 'Psst'
-            print(model.monitor.monitor_name)
         else:
             return True
 
-    def wheel_event(self, monitor, event):
-        pass
+    def wheel_event(self, model, event):
+        return False
+
+    def mouse_move_event(self, model, event: QMouseEvent):
+        if self.common_model.show_cursor_position:
+            QToolTip.showText(event.globalPos(),
+                              f"{event.globalPos().x()}, {event.globalPos().y()}")
+        return True
 
     def start(self):
         for monitor in self.monitor_model:
