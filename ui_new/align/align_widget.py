@@ -34,8 +34,8 @@ class AlignWidget(QGraphicsView):
                     self.model.monitor.screen_height)
 
     def keyPressEvent(self, event: QKeyEvent):
-        if self.controller.key_pressed(self.model.monitor, event.key()):
+        if self.controller.key_pressed(self.model, event.key()):
             super().keyPressEvent(event)
 
     def wheelEvent(self, event: QWheelEvent):
-        self.controller.wheel_event(self.monitor, event)
+        self.controller.wheel_event(self.model.monitor, event)

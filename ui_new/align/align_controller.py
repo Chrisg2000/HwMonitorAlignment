@@ -36,16 +36,16 @@ class AlignController:
         self.common_model = AlignViewModel()
         self.monitor_model = self.backend.monitor_model
 
-    def key_pressed(self, monitor, key):
+    def key_pressed(self, model: AlignModel, key):
         if key == Qt.Key_Escape:
             self.stop()
         elif key == Qt.Key_Up:
-            monitor.position_y -= 1
+            model.offset -= 1
         elif key == Qt.Key_Down:
-            monitor.position_y += 1
+            model.offset += 1
         elif key == Qt.Key_M:
-            monitor.monitor_name = 'Psst'
-            print(monitor.monitor_name)
+            model.monitor.monitor_name = 'Psst'
+            print(model.monitor.monitor_name)
         else:
             return True
 

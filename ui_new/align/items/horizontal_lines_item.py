@@ -16,7 +16,7 @@ class HorizontalLinesItem(QGraphicsItem):
         self.line_thickness = self.common_model.line_thickness
 
         self.setPos(0, 0)
-        self.model.monitor.changed("position_y").connect(self.setY)
+        self.model.changed("offset").connect(self.update_offset)
 
         self.common_model.changed("line_thickness").connect(self.set_line_thickness)
         self.common_model.changed("line_spacing").connect(self.set_line_spacing)
@@ -30,10 +30,11 @@ class HorizontalLinesItem(QGraphicsItem):
         painter.setPen(QPen(Qt.black, self.line_thickness))
 
         for local_pos_y in range(self.model.monitor.screen_height):
-            global_pos_y = self.model.top_left[1] + local_pos_y
+            global_pos_y = self.model.monitor.position_y + local_pos_y - self.model.offset
 
             if global_pos_y % self.line_spacing == 0:
                 painter.drawLine(0, local_pos_y, self.model.monitor.screen_width, local_pos_y)
+                painter.drawText(10, local_pos_y, f"{global_pos_y}, {local_pos_y}")
 
     def set_line_thickness(self, value):
         self.line_thickness = value
@@ -43,8 +44,6 @@ class HorizontalLinesItem(QGraphicsItem):
         self.line_spacing = value
         self.update(self.boundingRect())
 
-    def setY(self, y: float):
-        pos = self.pos()
-        pos.setY(y)
-        self.setPos(pos)
+    def update_offset(self, offset):
+        self.setY(offset)
         self.update(self.boundingRect())

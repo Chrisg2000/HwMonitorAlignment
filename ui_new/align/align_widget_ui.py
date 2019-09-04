@@ -44,7 +44,7 @@ class UiAlignWidget:
         self.model.common_model.changed("show_horizontal_lines").connect(self.horizontal_lines_layer.set_visible)
         self.model.common_model.changed("show_info_box").connect(self.info_box_layer.set_visible)
 
-        self.info_box = MonitorInfoBoxItem(self.model.monitor)
+        self.info_box = MonitorInfoBoxItem(self.model)
         self.control_box = ControlBoxItem(self.model.common_model)
         self.horizontal_lines = HorizontalLinesItem(self.model)
 
@@ -53,7 +53,7 @@ class UiAlignWidget:
         self.create_horizontal_lines()
         if self.model.monitor.primary:
             self.create_control_box()
-        self.arrange_items()
+        self._arrange_items()
 
         view.setScene(self.graphics_scene)
 
@@ -81,7 +81,7 @@ class UiAlignWidget:
         self.horizontal_lines_layer.add_to_layer(self.horizontal_lines)
         self.graphics_scene.addItem(self.horizontal_lines)
 
-    def arrange_items(self):
+    def _arrange_items(self):
         """
         This function is a mess and it is probably easier to achieve what I want,
         but I didn't find any way now. So keep it like this as long you dont find a better solution
