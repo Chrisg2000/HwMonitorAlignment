@@ -16,7 +16,8 @@ class DisplayOrientation(enum.IntEnum):
 class Monitor(HasProperties, Memento):
     device_name = WriteOnceProperty(default='')
     monitor_name = Property(default='')
-    display_monitor = Property(default='')
+    friendly_monitor_name = Property(default='')
+    display_adapter = Property(default='')
 
     screen_width = Property(default=0)
     screen_height = Property(default=0)
@@ -26,20 +27,28 @@ class Monitor(HasProperties, Memento):
 
     primary = Property(default=False)
 
+    @property
+    def aspect_ratio(self) -> float:
+        if self.screen_height == 0:
+            raise ValueError("Invalid Monitor defined. Impossible size of height = 0")
+        return self.screen_width / self.screen_height
+
     def __init__(self,
                  device_name='',
                  monitor_name='',
-                 display_monitor='',
+                 friendly_monitor_name='',
+                 display_adapter='',
                  screen_width=0,
                  screen_height=0,
                  position_x=0,
                  position_y=0,
-                 primary=False,
-                 orientation=DisplayOrientation.DMDO_DEFAULT):
+                 orientation=DisplayOrientation.DMDO_DEFAULT,
+                 primary=False):
         super().__init__()
         self.device_name = device_name
         self.monitor_name = monitor_name
-        self.display_monitor = display_monitor
+        self.friendly_monitor_name = friendly_monitor_name
+        self.display_adapter = display_adapter
 
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -48,12 +57,6 @@ class Monitor(HasProperties, Memento):
         self.orientation = orientation
 
         self.primary = primary
-
-    @property
-    def aspect_ratio(self) -> float:
-        if self.screen_height == 0:
-            raise ValueError("Invalid Monitor defined. Impossible size of height = 0")
-        return self.screen_width / self.screen_height
 
     @property
     def position(self) -> Tuple[float, float]:
@@ -66,7 +69,8 @@ class Monitor(HasProperties, Memento):
     def create_memento(self):
         return (self.device_name,
                 self.monitor_name,
-                self.display_monitor,
+                self.friendly_monitor_name,
+                self.display_adapter,
                 self.screen_width,
                 self.screen_height,
                 self.position_x,
@@ -77,7 +81,8 @@ class Monitor(HasProperties, Memento):
     def set_memento(self, memento):
         (self.device_name,
          self.monitor_name,
-         self.display_monitor,
+         self.friendly_monitor_name,
+         self.display_adapter,
          self.screen_width,
          self.screen_height,
          self.position_x,
@@ -92,10 +97,13 @@ class Monitor(HasProperties, Memento):
         return monitor
 
     def __str__(self):
-        return f"device_name: '{self.device_name}', " \
-               f"monitor_name: '{self.monitor_name}', " \
-               f"display_monitor '{self.display_monitor}', " \
-               f"resolution: {self.screen_width}x{self.screen_height}, " \
-               f"position: ({self.position_x} | {self.position_y}), " \
-               f"orientation: {self.orientation}, " \
+        return f"device_name: {self.device_name} " \
+               f"monitor_name: {self.monitor_name} " \
+               f"friendly_monitor_name: {self.friendly_monitor_name} " \
+               f"display_adapter: {self.display_adapter} " \
+               f"screen_width: {self.screen_width} " \
+               f"screen_height: {self.screen_height} " \
+               f"position_x: {self.position_x} " \
+               f"position_y: {self.position_y} " \
+               f"orientation: {self.orientation} " \
                f"primary: {self.primary}"

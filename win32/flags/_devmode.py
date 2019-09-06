@@ -1,6 +1,11 @@
 import enum
 
 
+class DEVICE_MODE_MODE(enum.IntEnum):
+    ENUM_CURRENT_SETTINGS = -1
+    ENUM_REGISTRY_SETTINGS = -2
+
+
 class DEVICE_MODE_FIELD_FLAGS(enum.IntFlag):
     ORIENTATION = 0x00000001
     PAPERSIZE = 0x00000002

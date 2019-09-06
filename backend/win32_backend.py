@@ -1,9 +1,10 @@
 from backend.monitor_backend import BaseMonitorBackend
 from monitors.monitor import Monitor
-from win32.flags import SystemMetricsFlags, MONITORINFO_FLAGS, QUERY_DEVICE_CONFIG_FLAGS, DISPLAYCONFIG_DEVICE_INFO_TYPE
-from win32.func import GetSystemMetrics, GetMonitorInfoEx, EnumDisplaySettings, EnumDisplayDevices, EnumDisplayMonitors, \
-    GetDisplayConfigBufferSizes, QueryDisplayConfig, DisplayConfigGetDeviceInfo
-from win32.structs.displayconfig import DISPLAYCONFIG_SOURCE_DEVICE_NAME, DISPLAYCONFIG_TARGET_DEVICE_NAME
+from win32.flags import SystemMetricsFlags, QUERY_DEVICE_CONFIG_FLAGS, \
+    DISPLAYCONFIG_DEVICE_INFO_TYPE, DISPLAY_DEVICE_FLAGS, DEVICE_MODE_MODE
+from win32.func import GetSystemMetrics, EnumDisplaySettings, EnumDisplayDevices, GetDisplayConfigBufferSizes, \
+    QueryDisplayConfig, DisplayConfigGetDeviceInfo
+from win32.structs.displayconfig import DISPLAYCONFIG_TARGET_DEVICE_NAME
 
 
 class Win32Backend(BaseMonitorBackend):
@@ -11,7 +12,7 @@ class Win32Backend(BaseMonitorBackend):
     def __init__(self):
         super().__init__()
 
-        self._scan_monitors()
+        self._discover_monitors()
 
     def get_vscreen_size(self):
         width = GetSystemMetrics(SystemMetricsFlags.CXVIRTUALSCREEN)
@@ -23,39 +24,52 @@ class Win32Backend(BaseMonitorBackend):
         y = GetSystemMetrics(SystemMetricsFlags.YVIRTUALSCREEN)
         return x, y
 
-    def _scan_monitors(self):
+    def set_monitor_position(self, device_name: str, x: int, y: int):
+        pass
+
+    def _discover_monitors(self):
         path_count, mode_count = GetDisplayConfigBufferSizes(QUERY_DEVICE_CONFIG_FLAGS.ONLY_ACTIVE_PATHS)
         display_paths, display_modes = QueryDisplayConfig(QUERY_DEVICE_CONFIG_FLAGS.ONLY_ACTIVE_PATHS, path_count,
                                                           mode_count)
 
-        def _proc_monitor(hmonitor, hdc, lprect, lparam):
-            # Gather information
-            monitor_info = GetMonitorInfoEx(hmonitor)
-            devmode = EnumDisplaySettings(monitor_info.szDevice, 0)
-            display_device = EnumDisplayDevices(monitor_info.szDevice, 0, 0)
-            source_device_name = DISPLAYCONFIG_SOURCE_DEVICE_NAME()
+        monitor_friendly_device_names = {}
+        for path in display_paths:
             target_device_name = DISPLAYCONFIG_TARGET_DEVICE_NAME()
+            DisplayConfigGetDeviceInfo(target_device_name, DISPLAYCONFIG_DEVICE_INFO_TYPE.GET_TARGET_NAME,
+                                       path.sourceInfo.adapterId, path.targetInfo.id)
+            monitor_friendly_device_names[
+                target_device_name.monitorDevicePath] = target_device_name.monitorFriendlyDeviceName
 
-            for path in display_paths:
-                DisplayConfigGetDeviceInfo(source_device_name, DISPLAYCONFIG_DEVICE_INFO_TYPE.GET_SOURCE_NAME,
-                                           path.sourceInfo.adapterId, path.sourceInfo.id)
-                if monitor_info.szDevice == source_device_name.viewGdiDeviceName:
-                    target_device_name = DISPLAYCONFIG_TARGET_DEVICE_NAME()
-                    DisplayConfigGetDeviceInfo(target_device_name, DISPLAYCONFIG_DEVICE_INFO_TYPE.GET_TARGET_NAME,
-                                               path.sourceInfo.adapterId, path.targetInfo.id)
+        i_dev_num = 0
+        while i_dev_num < 1000:  # prevent infinite loop
+            try:
+                display_device = EnumDisplayDevices(None, i_dev_num, 0)
+                dev_mon = 0
+                while dev_mon < 1000:  # prevent inner infinite loop
+                    try:
+                        display_device_monitor = EnumDisplayDevices(display_device.DeviceName, dev_mon, 1)
 
-            # Create Monitor Item
-            model_item = Monitor(device_name=monitor_info.szDevice,
-                                 monitor_name=target_device_name.monitorFriendlyDeviceName,
-                                 display_monitor=display_device.DeviceString,
-                                 screen_width=monitor_info.rcMonitor.right - monitor_info.rcMonitor.left,
-                                 screen_height=monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top,
-                                 position_x=monitor_info.rcMonitor.left,
-                                 position_y=monitor_info.rcMonitor.top,
-                                 orientation=devmode.DUMMYUNIONNAME.DUMMYSTRUCTNAME2.dmDisplayOrientation,
-                                 primary=MONITORINFO_FLAGS.PRIMARY in MONITORINFO_FLAGS(monitor_info.dwFlags))
+                        if display_device_monitor.StateFlags & DISPLAY_DEVICE_FLAGS.ATTACHED_TO_DESKTOP and \
+                                not display_device_monitor.StateFlags & DISPLAY_DEVICE_FLAGS.MIRRORING_DRIVER:
+                            devmode = EnumDisplaySettings(display_device.DeviceName,
+                                                          DEVICE_MODE_MODE.ENUM_REGISTRY_SETTINGS)
 
-            self.monitor_model.add(model_item)
-            return True
+                            item = Monitor(
+                                device_name=display_device.DeviceName,
+                                monitor_name=display_device_monitor.DeviceString,
+                                friendly_monitor_name=monitor_friendly_device_names[display_device_monitor.DeviceID],
+                                display_adapter=display_device.DeviceString,
+                                screen_width=devmode.dmPelsWidth,
+                                screen_height=devmode.dmPelsHeight,
+                                position_x=devmode.DUMMYUNIONNAME.dmPosition.x,
+                                position_y=devmode.DUMMYUNIONNAME.dmPosition.y,
+                                orientation=devmode.DUMMYUNIONNAME.DUMMYSTRUCTNAME2.dmDisplayOrientation,
+                                primary=bool(display_device.StateFlags & DISPLAY_DEVICE_FLAGS.PRIMARY_DEVICE))
 
-        EnumDisplayMonitors(None, None, _proc_monitor, 0)
+                            self.monitor_model.add(item)
+                        dev_mon += 1
+                    except WindowsError:
+                        break
+                i_dev_num += 1
+            except WindowsError:
+                break

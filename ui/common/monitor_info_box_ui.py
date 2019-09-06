@@ -4,7 +4,8 @@ from monitors.monitor import DisplayOrientation
 
 FMT_DEVICE_NAME = "<b>{}</b>"
 FMT_MONITOR_NAME = "<b>{}</b>"
-FMT_DISPLAY_MONITOR = "<b>{}</b>"
+FMT_FRIENDLY_MONITOR_NAME = "<b>{}</b>"
+FMT_DISPLAY_ADAPTER = "<b>{}</b>"
 
 FMT_SCREEN_RESOLUTION = "<b>{}x{}</b>"
 FMT_VSCREEN_POSITION = "<b>({}, {})</b>"
@@ -56,8 +57,10 @@ class UiMonitorInfoBox:
                                                 fmt=FMT_DEVICE_NAME, parent=view)
         self.monitor_name = self._property_label('monitor_name', func='monitor_name',
                                                  fmt=FMT_MONITOR_NAME, parent=view)
-        self.display_monitor = self._property_label('display_monitor', func='display_monitor',
-                                                    fmt=FMT_DISPLAY_MONITOR, parent=view)
+        self.friendly_monitor_name = self._property_label('friendly_monitor_name', func='friendly_monitor_name',
+                                                          fmt=FMT_FRIENDLY_MONITOR_NAME, parent=view)
+        self.display_adapter = self._property_label('display_adapter', func='display_adapter',
+                                                    fmt=FMT_DISPLAY_ADAPTER, parent=view)
         self.screen_resolution = self._property_label('screen_width', 'screen_height', func='size',
                                                       fmt=FMT_SCREEN_RESOLUTION, parent=view)
         self.vscreen_position = self._property_label('position_x', 'position_y', func='position',
@@ -70,7 +73,8 @@ class UiMonitorInfoBox:
 
         self._layout.addRow("DEVICE NAME:", self.device_name)
         self._layout.addRow("MONITOR NAME:", self.monitor_name)
-        self._layout.addRow("DISPLAY MONITOR:", self.display_monitor)
+        self._layout.addRow("FRIENDLY MONITOR NAME:", self.friendly_monitor_name)
+        self._layout.addRow("DISPLAY ADAPTER:", self.display_adapter)
         self._layout.addRow("SCREEN RESOLUTION:", self.screen_resolution)
         self._layout.addRow("VIRTUAL SCREEN POSITION:", self.vscreen_position)
         self._layout.addRow("ORIENTATION:", self.orientation)
