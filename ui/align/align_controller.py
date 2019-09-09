@@ -5,6 +5,7 @@ from PySide2.QtWidgets import QToolTip
 from ui.align.align_widget import AlignWidget
 from ui.align.models.align_model import AlignModel
 from ui.align.models.view_model import AlignViewModel
+from ui.dialogs.settings_changed import DisplaySettingsChanged
 
 
 class AlignController:
@@ -72,7 +73,18 @@ class AlignController:
 
     def button_apply(self, checked=False):
         """Align Widget Control Box Dialog Buttons Apply"""
-        pass
+        for model, _ in self.map.values():
+            model.apply_offset()
+        self.backend.set_monitor_position(None, 0, 0)  # apply changes
+
+        # Reset logic
+        dialog = DisplaySettingsChanged(timeout=20)
+        rst = dialog.exec_()
+        if rst == DisplaySettingsChanged.No:
+            for model, _ in self.map.values():
+                model.rollback()
+                model.apply_offset()
+            self.backend.set_monitor_position(None, 0, 0)
 
     def button_close(self, checked=False):
         """Align Widget Control Box Dialog Buttons Close"""

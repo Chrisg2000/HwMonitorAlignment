@@ -1,8 +1,9 @@
 from PySide2.QtGui import QCloseEvent
-from PySide2.QtWidgets import QMainWindow
+from PySide2.QtWidgets import QMainWindow, QMessageBox
 
 from backend.monitor_backend import BaseMonitorBackend
 from ui.align.align_controller import AlignController
+from ui.dialogs.settings_changed import DisplaySettingsChanged
 from ui.main_window_ui import UiMainWindow
 
 

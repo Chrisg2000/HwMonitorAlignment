@@ -137,6 +137,7 @@ class DEVMODE(_Win32BaseStruct):
       DWORD dmPanningHeight;
     } DEVMODEW, *PDEVMODEW, *NPDEVMODEW, *LPDEVMODEW;
     """
+    _anonymous_ = ("DUMMYUNIONNAME",)
     _fields_ = [
         ("dmDeviceName", wintypes.WCHAR * CCHDEVICENAME),
         ("dmSpecVersion", wintypes.WORD),

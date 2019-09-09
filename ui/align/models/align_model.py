@@ -36,3 +36,11 @@ class AlignModel(HasProperties):
     def rollback(self):
         self.offset = 0
         self.monitor.set_memento(self.__monitor_memento)
+
+    def apply_offset(self):
+        self.monitor.position_y -= self.offset
+        self.offset = 0
+        self.backend.set_monitor_position(self.monitor.device_name,
+                                          self.monitor.position_x,
+                                          self.monitor.position_y,
+                                          reset=False)

@@ -1,4 +1,5 @@
 import ctypes
+import enum
 from ctypes import wintypes
 
 from core.memento import Memento
@@ -27,8 +28,8 @@ class _Win32BaseStruct(__Memento, ctypes.Structure):
     _fields_ = []
 
     def __str__(self):
-        return "{}: {{{}}}".format(self.__class__.__name__, ", ".join(
-            ["{}: {}".format(field[0], getattr(self, field[0]))
+        return "{}: {{\n{}\n}}".format(self.__class__.__name__, ",\n".join(
+            ["\t{}: {}".format(field[0], getattr(self, field[0]))
              for field in self._fields_]))
 
 
@@ -36,8 +37,8 @@ class _Win32BaseUnion(__Memento, ctypes.Union):
     _fields_ = []
 
     def __str__(self):
-        return "{}: {{{}}}".format(self.__class__.__name__, ", ".join(
-            ["{}: {}".format(field[0], getattr(self, field[0]))
+        return "{}: {{\n{}\n}}".format(self.__class__.__name__, ",\n".join(
+            ["\t{}: {}".format(field[0], getattr(self, field[0]))
              for field in self._fields_]))
 
 

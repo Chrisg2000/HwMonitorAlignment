@@ -1,9 +1,10 @@
 from backend.monitor_backend import BaseMonitorBackend
 from monitors.monitor import Monitor
 from win32.flags import SystemMetricsFlags, QUERY_DEVICE_CONFIG_FLAGS, \
-    DISPLAYCONFIG_DEVICE_INFO_TYPE, DISPLAY_DEVICE_FLAGS, DEVICE_MODE_MODE
+    DISPLAYCONFIG_DEVICE_INFO_TYPE, DISPLAY_DEVICE_FLAGS, DEVICE_MODE_MODE, DEVICE_MODE_FIELD_FLAGS, \
+    CHANGE_DISPLAY_SETTINGS
 from win32.func import GetSystemMetrics, EnumDisplaySettings, EnumDisplayDevices, GetDisplayConfigBufferSizes, \
-    QueryDisplayConfig, DisplayConfigGetDeviceInfo
+    QueryDisplayConfig, DisplayConfigGetDeviceInfo, ChangeDisplaySettingsEx
 from win32.structs.displayconfig import DISPLAYCONFIG_TARGET_DEVICE_NAME
 
 
@@ -24,8 +25,29 @@ class Win32Backend(BaseMonitorBackend):
         y = GetSystemMetrics(SystemMetricsFlags.YVIRTUALSCREEN)
         return x, y
 
-    def set_monitor_position(self, device_name: str, x: int, y: int):
-        pass
+    def set_monitor_position(self, device_name, x: int, y: int, *, reset=True):
+        if device_name is None:
+            # Apply settings
+            return ChangeDisplaySettingsEx(None, None, 0, None)
+        elif device_name not in self.monitor_model:
+            raise ValueError(f"Monitor device {device_name} is not registered in this backend")
+        devmode = EnumDisplaySettings(device_name,
+                                      DEVICE_MODE_MODE.ENUM_REGISTRY_SETTINGS)
+        devmode.dmPosition = (x, y)
+        devmode.dmFields = DEVICE_MODE_FIELD_FLAGS.POSITION  # only change the position of the screen
+
+        update_flags = CHANGE_DISPLAY_SETTINGS.UPDATEREGISTRY | CHANGE_DISPLAY_SETTINGS.GLOBAL
+        if not reset:
+            return ChangeDisplaySettingsEx(device_name,
+                                           devmode,
+                                           update_flags |
+                                           CHANGE_DISPLAY_SETTINGS.NORESET,
+                                           None)
+
+        return ChangeDisplaySettingsEx(device_name,
+                                       devmode,
+                                       update_flags,
+                                       None)
 
     def _discover_monitors(self):
         path_count, mode_count = GetDisplayConfigBufferSizes(QUERY_DEVICE_CONFIG_FLAGS.ONLY_ACTIVE_PATHS)
