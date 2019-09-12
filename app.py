@@ -1,5 +1,5 @@
-from backend.win32_backend import Win32Backend
-from ui.main_window import MainWindow
+from hwmonitor.backend.win32_backend import Win32Backend
+from hwmonitor.ui.main_window import MainWindow
 
 
 class HwMonitorAlignmentApp:
