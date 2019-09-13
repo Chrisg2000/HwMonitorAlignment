@@ -1,6 +1,6 @@
 from PySide2.QtWidgets import QLabel, QFormLayout
 
-from hwmonitor.monitors.monitor import DisplayOrientation
+from hwmonitor.monitors.monitor import MonitorOrientation
 
 FMT_DEVICE_NAME = "<b>{}</b>"
 FMT_MONITOR_NAME = "<b>{}</b>"
@@ -13,14 +13,14 @@ FMT_MONITOR_ORIENTATION = "<b>{}</b>"
 FMT_MONITOR_PRIMARY = "<b>{}</b>"
 
 
-def label_orientation(orientation: DisplayOrientation):
-    if orientation == DisplayOrientation.DMDO_DEFAULT:
+def label_orientation(orientation: MonitorOrientation):
+    if orientation == MonitorOrientation.Landscape:
         return 'Landscape'
-    elif orientation == DisplayOrientation.DMDO_90:
+    elif orientation == MonitorOrientation.Portrait:
         return 'Portrait'
-    elif orientation == DisplayOrientation.DMDO_180:
+    elif orientation == MonitorOrientation.FlippedLandscape:
         return 'Landscape (flipped)'
-    elif orientation == DisplayOrientation.DMDO_270:
+    elif orientation == MonitorOrientation.FlippedPortrait:
         return 'Portrait (flipped)'
     else:
         raise ValueError("orientation needs to be a DisplayOrientation")

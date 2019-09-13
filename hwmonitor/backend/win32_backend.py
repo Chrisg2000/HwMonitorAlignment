@@ -75,7 +75,7 @@ class Win32Backend(BaseMonitorBackend):
                             devmode = EnumDisplaySettings(display_device.DeviceName,
                                                           DevmodeSettings.ENUM_REGISTRY_SETTINGS)
 
-                            item = Monitor(
+                            item = MonitorFactory.create_monitor(
                                 device_name=display_device.DeviceName,
                                 monitor_name=display_device_monitor.DeviceString,
                                 friendly_monitor_name=monitor_friendly_device_names[display_device_monitor.DeviceID],
