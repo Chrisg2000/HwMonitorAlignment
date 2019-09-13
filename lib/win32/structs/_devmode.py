@@ -1,10 +1,10 @@
 import ctypes
 from ctypes import wintypes
 
-from hwmonitor.win32.structs._base_type import _Win32BaseStruct, _Win32BaseUnion, CCHDEVICENAME, CCHFORMNAME
+from lib.win32.structs._base_type import _Win32BaseStruct, _Win32BaseUnion, CCHDEVICENAME, CCHFORMNAME
 
 
-class DUMMYSTRUCTNAME(_Win32BaseStruct):
+class _DUMMYSTRUCTNAME(_Win32BaseStruct):
     """
     struct {
           short dmOrientation;
@@ -29,7 +29,7 @@ class DUMMYSTRUCTNAME(_Win32BaseStruct):
     ]
 
 
-class DUMMYSTRUCTNAME2(_Win32BaseStruct):
+class _DUMMYSTRUCTNAME2(_Win32BaseStruct):
     """
     struct {
           POINTL dmPosition;
@@ -44,7 +44,7 @@ class DUMMYSTRUCTNAME2(_Win32BaseStruct):
     ]
 
 
-class DUMMYUNIONNAME(_Win32BaseUnion):
+class _DUMMYUNIONNAME(_Win32BaseUnion):
     """
     union {
         struct {
@@ -66,13 +66,13 @@ class DUMMYUNIONNAME(_Win32BaseUnion):
       } DUMMYUNIONNAME;
     """
     _fields_ = [
-        ("DUMMYSTRUCTNAME", DUMMYSTRUCTNAME),
+        ("DUMMYSTRUCTNAME", _DUMMYSTRUCTNAME),
         ("dmPosition", wintypes.POINTL),
-        ("DUMMYSTRUCTNAME2", DUMMYSTRUCTNAME2),
+        ("DUMMYSTRUCTNAME2", _DUMMYSTRUCTNAME2),
     ]
 
 
-class DUMMYUNIONNAME2(_Win32BaseUnion):
+class _DUMMYUNIONNAME2(_Win32BaseUnion):
     """
     union {
         DWORD dmDisplayFlags;
@@ -145,7 +145,7 @@ class DEVMODE(_Win32BaseStruct):
         ("dmSize", wintypes.WORD),
         ("dmDriverExtra", wintypes.WORD),
         ("dmFields", wintypes.DWORD),
-        ("DUMMYUNIONNAME", DUMMYUNIONNAME),
+        ("DUMMYUNIONNAME", _DUMMYUNIONNAME),
         ("dmColor", wintypes.SHORT),
         ("dmDuplex", wintypes.SHORT),
         ("dmYResolution", wintypes.SHORT),
@@ -156,7 +156,7 @@ class DEVMODE(_Win32BaseStruct):
         ("dmBitsPerPel", wintypes.DWORD),
         ("dmPelsWidth", wintypes.DWORD),
         ("dmPelsHeight", wintypes.DWORD),
-        ("DUMMYUNIONNAME2", DUMMYUNIONNAME2),
+        ("DUMMYUNIONNAME2", _DUMMYUNIONNAME2),
         ("dmDisplayFrequency", wintypes.DWORD),
         ("dmICMMethod", wintypes.DWORD),
         ("dmICMIntent", wintypes.DWORD),

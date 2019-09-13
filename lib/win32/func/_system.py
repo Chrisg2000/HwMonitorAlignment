@@ -1,6 +1,6 @@
 from ctypes import windll, wintypes
 
-from hwmonitor.win32._util import function_factory
+from lib.win32._util import function_factory
 
 # GetSystemMetrics
 
@@ -24,6 +24,6 @@ def GetSystemMetrics(nIndex):
     .. _GetSystemMetrics: https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics
 
     :param nIndex: The system metric or configuration setting to be retrieved
-    :return:  the return value is the requested system metric or configuration setting.
+    :return: the return value is the requested system metric or configuration setting.
     """
     return _BaseGetSystemMetrics(nIndex)

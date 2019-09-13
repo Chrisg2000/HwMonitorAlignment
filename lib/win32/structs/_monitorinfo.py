@@ -1,7 +1,7 @@
 import ctypes
 from ctypes import wintypes
 
-from hwmonitor.win32.structs._base_type import _Win32BaseStruct, CCHDEVICENAME
+from lib.win32.structs._base_type import _Win32BaseStruct, CCHDEVICENAME
 
 
 class MONITORINFO(_Win32BaseStruct):

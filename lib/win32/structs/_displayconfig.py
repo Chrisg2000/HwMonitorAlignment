@@ -1,7 +1,7 @@
 from ctypes import c_uint32, c_uint16, c_bool, c_char
 from ctypes.wintypes import WCHAR
 
-from hwmonitor.win32.structs._base_type import _Win32BaseStruct, CCHDEVICENAME, LUID, c_enum
+from lib.win32.structs._base_type import _Win32BaseStruct, c_enum, LUID, CCHDEVICENAME
 
 
 class DISPLAYCONFIG_DEVICE_INFO_HEADER(_Win32BaseStruct):
@@ -21,7 +21,6 @@ class DISPLAYCONFIG_DEVICE_INFO_HEADER(_Win32BaseStruct):
     ]
 
 
-# noinspection PyTypeChecker
 class DISPLAYCONFIG_TARGET_DEVICE_NAME(_Win32BaseStruct):
     """
     typedef struct DISPLAYCONFIG_TARGET_DEVICE_NAME {
@@ -60,7 +59,6 @@ class DISPLAYCONFIG_SOURCE_DEVICE_NAME(_Win32BaseStruct):
     ]
 
 
-# noinspection PyTypeChecker
 class DISPLAYCONFIG_ADAPTER_NAME(_Win32BaseStruct):
     """
     typedef struct DISPLAYCONFIG_ADAPTER_NAME {

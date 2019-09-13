@@ -1,12 +1,10 @@
 import ctypes
 from ctypes import windll, POINTER, byref, wintypes
 
-from hwmonitor.win32._util import function_factory, check_zero
-from hwmonitor.win32.structs.devmode import DEVMODE
-from hwmonitor.win32.structs.display_device import DISPLAY_DEVICE
+from lib.win32._util import function_factory, check_zero
+from lib.win32.structs import DISPLAY_DEVICE, DEVMODE
 
 # EnumDisplayDevices
-
 _BaseEnumDisplayDevices = function_factory(
     windll.user32.EnumDisplayDevicesW,
     [wintypes.LPCWSTR, wintypes.DWORD, POINTER(DISPLAY_DEVICE), wintypes.DWORD],

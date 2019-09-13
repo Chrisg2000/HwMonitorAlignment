@@ -1,7 +1,7 @@
 import enum
 
 
-class DISP_CHANGE(enum.IntEnum):
+class DisplayChange(enum.IntEnum):
     RESTART = 1
     SUCCESSFUL = 0
     FAILED = -1
@@ -12,7 +12,7 @@ class DISP_CHANGE(enum.IntEnum):
     BADDUALVIEW = -6
 
 
-class CHANGE_DISPLAY_SETTINGS(enum.IntFlag):
+class ChangeDisplaySettings(enum.IntFlag):
     UPDATEREGISTRY = 0x00000001
     TEST = 0x00000002
     FULLSCREEN = 0x00000004
@@ -26,7 +26,7 @@ class CHANGE_DISPLAY_SETTINGS(enum.IntFlag):
     NORESET = 0x10000000
 
 
-class DISP_CHANGE_RETURN(enum.IntEnum):
+class ChangeDisplayReturn(enum.IntEnum):
     SUCCESSFUL = 0
     RESTART = 1
     FAILED = -1

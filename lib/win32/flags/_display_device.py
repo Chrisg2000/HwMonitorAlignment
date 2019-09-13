@@ -1,7 +1,7 @@
 import enum
 
 
-class DISPLAY_DEVICE_FLAGS(enum.IntFlag):
+class DisplayDeviceFlags(enum.IntFlag):
     # DISPLAY_DEVICE.StateFlags for adapters
     ATTACHED_TO_DESKTOP = 0x00000001
     MULTI_DRIVER = 0x00000002

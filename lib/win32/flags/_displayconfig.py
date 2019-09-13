@@ -1,13 +1,13 @@
 import enum
 
 
-class QUERY_DEVICE_CONFIG_FLAGS(enum.IntEnum):
+class QueryDeviceConfigFlags(enum.IntEnum):
     ALL_PATHS = 0x00000001
     ONLY_ACTIVE_PATHS = 0x00000002
     DATABASE_CURRENT = 0x00000004
 
 
-class DISPLAYCONFIG_DEVICE_INFO_TYPE(enum.IntEnum):
+class DisplayConfigDeviceInfoType(enum.IntEnum):
     GET_SOURCE_NAME = 1
     GET_TARGET_NAME = 2
     GET_TARGET_PREFERRED_MODE = 3

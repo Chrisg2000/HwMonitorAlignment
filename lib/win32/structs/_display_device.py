@@ -1,10 +1,9 @@
 import ctypes
 from ctypes import wintypes
 
-from hwmonitor.win32.structs._base_type import _Win32BaseStruct
+from lib.win32.structs._base_type import _Win32BaseStruct
 
 
-# noinspection PyTypeChecker
 class DISPLAY_DEVICE(_Win32BaseStruct):
     """https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-display_devicew
     typedef struct _DISPLAY_DEVICEW {

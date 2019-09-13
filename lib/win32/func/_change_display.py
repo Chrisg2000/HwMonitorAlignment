@@ -1,7 +1,7 @@
 from ctypes import windll, wintypes, POINTER, byref
 
-from hwmonitor.win32._util import function_factory
-from hwmonitor.win32.structs.devmode import DEVMODE
+from lib.win32._util import function_factory
+from lib.win32.structs import DEVMODE
 
 _BaseChangeDisplaySettingsEx = function_factory(
     windll.user32.ChangeDisplaySettingsExW,

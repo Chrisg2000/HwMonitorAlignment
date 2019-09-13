@@ -1,10 +1,9 @@
 from ctypes import windll, POINTER, byref, wintypes
 
-from hwmonitor.win32._util import function_factory, check_zero
-from hwmonitor.win32.structs.monitorinfo import MONITORINFO, MONITORINFOEX
+from lib.win32._util import function_factory, check_zero
+from lib.win32.structs import MONITORINFO, MONITORINFOEX
 
 # GetMonitorInfo
-
 _BaseGetMonitorInfoW = function_factory(
     windll.user32.GetMonitorInfoW,
     [wintypes.HMONITOR, POINTER(MONITORINFO)],

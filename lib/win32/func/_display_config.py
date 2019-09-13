@@ -2,9 +2,8 @@ import ctypes
 from ctypes import windll, c_uint32, wintypes, POINTER, byref
 from typing import Any
 
-from hwmonitor.win32._util import function_factory, check_rcode
-from hwmonitor.win32.structs.displayconfig import DISPLAYCONFIG_PATH_INFO, DISPLAYCONFIG_MODE_INFO, \
-    DISPLAYCONFIG_DEVICE_INFO_HEADER
+from lib.win32._util import function_factory, check_rcode
+from lib.win32.structs import DISPLAYCONFIG_PATH_INFO, DISPLAYCONFIG_MODE_INFO, DISPLAYCONFIG_DEVICE_INFO_HEADER
 
 _BaseGetDisplayConfigBufferSizes = function_factory(
     windll.user32.GetDisplayConfigBufferSizes,
