@@ -18,8 +18,8 @@ LONG ChangeDisplaySettingsExW(
 );
 ```
 Python implementation:
-```py3
-def ChangeDisplaySettingsEx(lpszDeviceName, lpDevMode, dwflags, lParam=None):
+```python
+def ChangeDisplaySettingsEx(lpszDeviceName, lpDevMode, dwflags, lParam=None): ...
 ```
 
 Returned Devmode structure:
@@ -86,8 +86,8 @@ LONG GetDisplayConfigBufferSizes(
 );
 ```
 Python implementation:
-```py3
-def GetDisplayConfigBufferSizes(flags):
+```python
+def GetDisplayConfigBufferSizes(flags): ...
 ```
 
 ### [QueryDisplayConfig](https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-querydisplayconfig):
@@ -104,8 +104,8 @@ LONG QueryDisplayConfig(
 );
 ```
 Python implementation:
-```py3
-def QueryDisplayConfig(flags, numPathArrayElements, numModeInfoArrayElements):
+```python
+def QueryDisplayConfig(flags, numPathArrayElements, numModeInfoArrayElements): ...
 ```
 
 ### [DisplayConfigGetDeviceInfo](https://docs.microsoft.com/windows/win32/api/winuser/nf-winuser-displayconfiggetdeviceinfo):
@@ -116,8 +116,8 @@ LONG DisplayConfigGetDeviceInfo(
 );
 ```
 Python implementation:
-```py3
-def DisplayConfigGetDeviceInfo(target: Any, type_, adapterId, id_):
+```python
+def DisplayConfigGetDeviceInfo(target: Any, type_, adapterId, id_): ...
 ```
 
 ### [EnumDisplayDevices](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw):
@@ -131,8 +131,8 @@ BOOL EnumDisplayDevicesW(
 );
 ```
 Python implementation:
-```py3
-def EnumDisplayDevices(lpDevice, iDevNum, dwFlags):
+```python
+def EnumDisplayDevices(lpDevice, iDevNum, dwFlags): ...
 ```
 
 Returned DisplayDevice structure:
@@ -158,8 +158,8 @@ BOOL EnumDisplaySettingsW(
 );
 ```
 Python implementation:
-```py3
-def EnumDisplaySettings(lpszDeviceName, iModeNum):
+```python
+def EnumDisplaySettings(lpszDeviceName, iModeNum): ...
 ```
 
 ### [EnumDisplayMonitors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors):
@@ -176,8 +176,8 @@ BOOL EnumDisplaySettingsW(
 );
 ```
 Python implementation:
-```py3
-def EnumDisplayMonitors(hdc, lpreClip, lpfnEnum, dwData):
+```python
+def EnumDisplayMonitors(hdc, lpreClip, lpfnEnum, dwData): ...
 ```
 
 ### [GetMonitorInfo](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow):
@@ -189,8 +189,8 @@ BOOL GetMonitorInfoW(
 );
 ```
 Python implementation:
-```py3
-def GetMonitorInfo(hMonitor):
+```python
+def GetMonitorInfo(hMonitor): ...
 ```
 
 Returned MonitorInfo strucuture:
@@ -212,8 +212,8 @@ BOOL GetMonitorInfoW(
 );
 ```
 Python implementation:
-```py3
-def GetMonitorInfoEx(hMonitor):
+```python
+def GetMonitorInfoEx(hMonitor): ...
 ```
 
 Returned MonitorInfoEx strucuture:
@@ -236,7 +236,7 @@ int GetSystemMetrics(
 );
 ```
 Python implementation:
-```py3
-def GetSystemMetrics(nIndex):
+```python
+def GetSystemMetrics(nIndex): ...
 ```
 
