@@ -3,7 +3,7 @@ import sys
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QApplication
 
-from app import HwMonitorAlignmentApp
+from hwmonitor.app import HwMonitorAlignmentApp
 
 
 def main():

@@ -27,18 +27,6 @@ class Monitor(HasProperties, Memento):
 
     Monitor provide **(and any subclass should do the same)** properties via
     HasProperties/Property specification.
-
-    :ivar device_name: Unique device name associated with OS-based display device model
-    :cvar monitor_name: OS related name of the associated display device
-    :cvar friendly_monitor_name: Easy-to-understand name of the monitor
-    :cvar display_adapter: Display Adapter of the display device
-
-    :cvar screen_width: Width of the screen in pixels
-    :cvar screen_height: Height of the screen in pixels
-    :cvar position_x: x-position of the screen on the virtual screen in pixel-coordinates
-    :cvar position_y: y-position of the screen on the virtual screen in pixel-coordinates
-    :cvar orientation: Real-world orientation of the display device
-    :cvar primary: Whether the display device is the primary one or not
     """
     device_name = WriteOnceProperty(default='')
     monitor_name = Property(default='')
@@ -53,9 +41,41 @@ class Monitor(HasProperties, Memento):
 
     primary = Property(default=False)
 
-    def __init__(self, device_name=''):
+    def __init__(self,
+                 device_name='',
+                 monitor_name='',
+                 friendly_monitor_name='',
+                 display_adapter='',
+                 screen_width=0,
+                 screen_height=0,
+                 position_x=0,
+                 position_y=0,
+                 orientation=MonitorOrientation.Landscape,
+                 primary=False):
+        """
+        :param device_name: Unique device name associated with OS-based display device model
+        :param monitor_name: OS related name of the associated display device
+        :param friendly_monitor_name: Easy-to-understand name of the monitor
+        :param display_adapter: Display Adapter of the display device
+        :param screen_width: Width of the screen in pixels
+        :param screen_height: Height of the screen in pixels
+        :param position_x: x-position of the screen on the virtual screen in pixel-coordinates
+        :param position_y: y-position of the screen on the virtual screen in pixel-coordinates
+        :param orientation: Real-world orientation of the display device
+        :param primary: Whether the display device is the primary one or not
+        """
         super().__init__()
         self.device_name = device_name
+        self.monitor_name = monitor_name
+        self.friendly_monitor_name = friendly_monitor_name
+        self.display_adapter = display_adapter
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.position_x = position_x
+        self.position_y = position_y
+        self.orientation = orientation
+        self.primary = primary
+
         self._state = MonitorSyncState.SYNCHRONIZED
 
         self.pre_apply_changes = Signal()
@@ -126,6 +146,6 @@ class Monitor(HasProperties, Memento):
     def size(self) -> Tuple[int, int]:
         return self.screen_width, self.screen_height
 
-    def _update_sync_state(self, name, value):
+    def _update_sync_state(self, instance, name, value):
         if getattr(self, name) == value:
             self._state = MonitorSyncState.UNSYNCHRONIZED

@@ -1,17 +1,17 @@
 from PySide2.QtGui import QCloseEvent
 from PySide2.QtWidgets import QMainWindow
 
-from hwmonitor.backend.monitor_backend import BaseMonitorBackend
+from hwmonitor.monitors.monitor_model import MonitorModel
 from hwmonitor.ui.align.align_controller import AlignController
 from hwmonitor.ui.main_window_ui import UiMainWindow
 
 
 class MainWindow(QMainWindow):
 
-    def __init__(self, backend: BaseMonitorBackend):
+    def __init__(self, monitor_model: MonitorModel):
         super().__init__()
-        self.backend = backend
-        self.align_controller = AlignController(self.backend)
+        self.monitor_model = monitor_model
+        self.align_controller = AlignController(self.monitor_model)
 
         self.ui = UiMainWindow(self, self.backend)
         self.ui.close_button.clicked.connect(self._button_close)

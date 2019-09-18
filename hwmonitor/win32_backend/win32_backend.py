@@ -1,5 +1,6 @@
 from hwmonitor.backend.monitor_backend import BaseMonitorBackend
-from hwmonitor.monitors.monitor_factory import MonitorFactory
+from hwmonitor.monitors.monitor_model import MonitorModel
+from hwmonitor.win32_backend.win32_monitor import Win32Monitor
 from lib.win32.flags import ChangeDisplaySettings, DevmodeSettings, DevmodeFieldFlags, DisplayDeviceFlags, \
     QueryDeviceConfigFlags, DisplayConfigDeviceInfoType, SystemMetricsFlags
 from lib.win32.func import GetSystemMetrics, ChangeDisplaySettingsEx, EnumDisplaySettings, GetDisplayConfigBufferSizes, \
@@ -7,12 +8,13 @@ from lib.win32.func import GetSystemMetrics, ChangeDisplaySettingsEx, EnumDispla
 from lib.win32.structs import DISPLAYCONFIG_TARGET_DEVICE_NAME
 
 
+# noinspection PyMethodMayBeStatic
 class Win32Backend(BaseMonitorBackend):
 
-    def __init__(self):
-        super().__init__()
-
-        self._discover_monitors()
+    def get_system_monitor_model(self) -> MonitorModel:
+        model = MonitorModel()
+        self._discover_monitors(model)
+        return model
 
     def get_vscreen_size(self):
         width = GetSystemMetrics(SystemMetricsFlags.CXVIRTUALSCREEN)
@@ -48,11 +50,10 @@ class Win32Backend(BaseMonitorBackend):
                                        update_flags,
                                        None)
 
-    def _discover_monitors(self):
+    def _discover_friendly_names(self):
         path_count, mode_count = GetDisplayConfigBufferSizes(QueryDeviceConfigFlags.ONLY_ACTIVE_PATHS)
         display_paths, display_modes = QueryDisplayConfig(QueryDeviceConfigFlags.ONLY_ACTIVE_PATHS, path_count,
                                                           mode_count)
-
         monitor_friendly_device_names = {}
         for path in display_paths:
             target_device_name = DISPLAYCONFIG_TARGET_DEVICE_NAME()
@@ -60,6 +61,10 @@ class Win32Backend(BaseMonitorBackend):
                                        path.sourceInfo.adapterId, path.targetInfo.id)
             monitor_friendly_device_names[
                 target_device_name.monitorDevicePath] = target_device_name.monitorFriendlyDeviceName
+        return monitor_friendly_device_names
+
+    def _discover_monitors(self, model):
+        monitor_friendly_device_names = self._discover_friendly_names()
 
         i_dev_num = 0
         while i_dev_num < 1000:  # prevent infinite loop
@@ -75,7 +80,7 @@ class Win32Backend(BaseMonitorBackend):
                             devmode = EnumDisplaySettings(display_device.DeviceName,
                                                           DevmodeSettings.ENUM_REGISTRY_SETTINGS)
 
-                            item = MonitorFactory.create_monitor(
+                            item = Win32Monitor(
                                 device_name=display_device.DeviceName,
                                 monitor_name=display_device_monitor.DeviceString,
                                 friendly_monitor_name=monitor_friendly_device_names[display_device_monitor.DeviceID],
@@ -85,9 +90,10 @@ class Win32Backend(BaseMonitorBackend):
                                 position_x=devmode.DUMMYUNIONNAME.dmPosition.x,
                                 position_y=devmode.DUMMYUNIONNAME.dmPosition.y,
                                 orientation=devmode.DUMMYUNIONNAME.DUMMYSTRUCTNAME2.dmDisplayOrientation,
-                                primary=bool(display_device.StateFlags & DisplayDeviceFlags.PRIMARY_DEVICE))
+                                primary=bool(display_device.StateFlags & DisplayDeviceFlags.PRIMARY_DEVICE),
+                                backend=self)
 
-                            self.monitor_model.add(item)
+                            model.add(item)
                         dev_mon += 1
                     except WindowsError:
                         break

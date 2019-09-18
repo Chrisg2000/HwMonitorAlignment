@@ -83,6 +83,17 @@ class MonitorModel(Model):
                 return monitor
         raise LookupError("Requested position is outside of visible virtual screen area")
 
+    def get_vscreen_size(self):
+        min_x = max_x = 0
+        min_y = max_y = 0
+
+        for monitor in self.__monitors:
+            min_x = min(min_x, monitor.position_x)
+            max_x = max(max_x, monitor.position_x + monitor.screen_width)
+            min_y = min(min_y, monitor.position_y)
+            max_y = max(max_y, monitor.position_y + monitor.screen_height)
+        return max_x - min_x, max_y - min_y
+
     def __len__(self) -> int:
         return len(self.__monitors)
 
