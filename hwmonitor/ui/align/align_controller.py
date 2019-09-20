@@ -10,7 +10,7 @@ from hwmonitor.ui.dialogs.settings_changed import DisplaySettingsChanged
 
 class AlignController:
 
-    def __init__(self, backend):
+    def __init__(self, monitor_model_adapter):
         """Controller for the widgets on the different monitors.
 
         The internal model and controller is shared among all other
@@ -32,12 +32,11 @@ class AlignController:
                                      data            data
 
 
-        :type backend: hwmonitor.backend.monitor_backend.BaseMonitorBackend
+        :type monitor_model_adapter: hwmonitor.monitors.vscreen_adapter.VScreenAdapter
         """
         self.map = {}
-        self.backend = backend
+        self.monitor_model_adapter = monitor_model_adapter
         self.common_model = AlignViewModel()
-        self.monitor_model = self.backend.monitor_model
 
     def key_pressed(self, model: AlignModel, key):
         if key == Qt.Key_Escape:
@@ -59,8 +58,8 @@ class AlignController:
         return True
 
     def start(self):
-        for monitor in self.monitor_model:
-            model = AlignModel(monitor, self.common_model, self.backend)
+        for monitor in self.monitor_model_adapter:
+            model = AlignModel(monitor, self.common_model, self.monitor_model_adapter)
             widget = AlignWidget(self, model)
             widget.showFullScreen()
 
@@ -75,7 +74,6 @@ class AlignController:
         """Align Widget Control Box Dialog Buttons Apply"""
         for model, _ in self.map.values():
             model.apply_offset()
-        self.backend.set_monitor_position(None, 0, 0)  # apply changes
 
         # Reset logic
         dialog = DisplaySettingsChanged(timeout=20)
@@ -84,7 +82,6 @@ class AlignController:
             for model, _ in self.map.values():
                 model.rollback()
                 model.apply_offset()
-            self.backend.set_monitor_position(None, 0, 0)
 
     def button_close(self, checked=False):
         """Align Widget Control Box Dialog Buttons Close"""

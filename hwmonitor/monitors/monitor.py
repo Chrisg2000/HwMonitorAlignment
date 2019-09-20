@@ -110,28 +110,6 @@ class Monitor(HasProperties, Memento):
         """
         return False
 
-    def sync_model(self):
-        """Synchronize this monitor item with the associated OS display device model"""
-        self.pre_sync_model.emit()
-        try:
-            result = self.__sync_model__()
-            if not result:
-                raise OSError
-            self._state = MonitorSyncState.SYNCHRONIZED
-            self.post_apply_changes.emit(result)
-            return result
-        except OSError as error:
-            self.post_sync_model.emit(error)
-
-    @abstractmethod
-    def __sync_model__(self):
-        """Implement the monitor 'sync_model' behavior.
-
-        If execution is successful should return True, otherwise False.
-        Function is also able to rise OSError-based exception to quit processing
-        """
-        return False
-
     @property
     def aspect_ratio(self) -> float:
         if self.screen_height == 0:

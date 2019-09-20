@@ -6,7 +6,7 @@ from hwmonitor.monitors.monitor_model import MonitorModel
 
 class Backend:
     """
-    The Interface for every monitor_model in this application. The Backend is used to synchronize
+    The Interface for every monitor_model_adapter in this application. The Backend is used to synchronize
     the local application model with the OS provided display device model.
 
     The concept of the virtual screen is copied from Microsoft Windows-
