@@ -35,7 +35,7 @@ class Win32Monitor(Monitor):
         if self.backend:
             self.backend.set_monitor_position(self.device_name, self.position_x, self.position_y)
         else:
-            raise NoBackendFoundError('Win32Monitor requires an monitor_model_adapter')
+            raise NoBackendFoundError('Win32Monitor requires an backend')
 
     def create_memento(self):
         return (self.device_name,

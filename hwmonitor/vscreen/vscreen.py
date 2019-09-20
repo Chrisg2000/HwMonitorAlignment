@@ -1,0 +1,63 @@
+from abc import abstractmethod
+from typing import Tuple
+
+from hwmonitor.core.signals import Signal
+from hwmonitor.monitors.monitor_model import MonitorModel
+
+
+class VScreen:
+
+    def __init__(self, monitors: MonitorModel):
+        super().__init__()
+
+        self._monitors = monitors
+
+        self.monitor_added = Signal()
+        self.monitor_removed = Signal()
+        self.monitor_model_reset = Signal()
+
+        self._monitors.item_added.connect(self.monitor_added.emit)
+        self._monitors.item_removed.connect(self.monitor_removed.emit)
+        self._monitors.model_reset.connect(self.monitor_model_reset.emit)
+
+    @property
+    def monitors(self):
+        return self._monitors
+
+    @property
+    @abstractmethod
+    def primary_monitor(self):
+        """Returns the monitor which has primary flag set"""
+
+    @property
+    @abstractmethod
+    def monitor_order(self):
+        """Yields the display _monitors in order on the virtual screen
+        from left to right, top to bottom.
+
+        The virtual screen is the bounding rectangle of all display _monitors.
+        """
+
+    @property
+    @abstractmethod
+    def size(self):
+        """Return the width and height of the virtual screen in pixels.
+
+        The virtual screen is the bounding rectangle of all display _monitors.
+        """
+
+    @property
+    @abstractmethod
+    def offset(self) -> Tuple[int, int]:
+        """Returns the coordinates for the top left corner of the virtual screen.
+
+        The virtual screen is the bounding rectangle of all display _monitors.
+        """
+
+    @abstractmethod
+    def get_from_position(self, x, y):
+        """Returns the monitor which includes the given position on the virtual screen.
+        If supplied position is outside of visible virtual screen area a LookupError will be raised.
+
+        The virtual screen is the bounding rectangle of all display _monitors.
+        """

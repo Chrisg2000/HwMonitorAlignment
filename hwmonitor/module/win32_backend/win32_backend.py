@@ -1,8 +1,8 @@
-from hwmonitor.backend.monitor_backend import BaseMonitorBackend
+from hwmonitor.backend.backend import Backend
 from hwmonitor.module.win32_backend.win32_monitor import Win32Monitor
-from hwmonitor.module.win32_backend.win32_vscreen_adapter import Win32VScreenAdapter
-from hwmonitor.monitors.vscreen_adapter import VScreenAdapter
+from hwmonitor.module.win32_backend.win32_vscreen import Win32VScreen
 from hwmonitor.monitors.monitor_model import MonitorModel
+from hwmonitor.vscreen.vscreen import VScreen
 from lib.win32.flags import ChangeDisplaySettings, DevmodeSettings, DevmodeFieldFlags, DisplayDeviceFlags, \
     QueryDeviceConfigFlags, DisplayConfigDeviceInfoType, SystemMetricsFlags
 from lib.win32.func import GetSystemMetrics, ChangeDisplaySettingsEx, EnumDisplaySettings, GetDisplayConfigBufferSizes, \
@@ -11,19 +11,19 @@ from lib.win32.structs import DISPLAYCONFIG_TARGET_DEVICE_NAME
 
 
 # noinspection PyMethodMayBeStatic
-class Win32Backend(BaseMonitorBackend):
+class Win32Backend(Backend):
 
-    def get_system_monitor_model(self) -> VScreenAdapter:
+    def get_vscreen(self) -> VScreen:
         model = MonitorModel()
         self._discover_monitors(model)
-        return Win32VScreenAdapter(model, self)
+        return Win32VScreen(model, self)
 
     def get_vscreen_size(self):
         width = GetSystemMetrics(SystemMetricsFlags.CXVIRTUALSCREEN)
         height = GetSystemMetrics(SystemMetricsFlags.CYVIRTUALSCREEN)
         return width, height
 
-    def get_vscreen_normalize_offset(self):
+    def get_vscreen_offset(self):
         x = GetSystemMetrics(SystemMetricsFlags.XVIRTUALSCREEN)
         y = GetSystemMetrics(SystemMetricsFlags.YVIRTUALSCREEN)
         return x, y

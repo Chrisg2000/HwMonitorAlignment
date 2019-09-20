@@ -38,7 +38,6 @@ class Monitor(HasProperties, Memento):
     position_x = Property(default=0)
     position_y = Property(default=0)
     orientation = Property(default=MonitorOrientation.Landscape)
-
     primary = Property(default=False)
 
     def __init__(self,

@@ -10,7 +10,7 @@ from hwmonitor.ui.dialogs.settings_changed import DisplaySettingsChanged
 
 class AlignController:
 
-    def __init__(self, monitor_model_adapter):
+    def __init__(self, vscreen):
         """Controller for the widgets on the different monitors.
 
         The internal model and controller is shared among all other
@@ -32,10 +32,10 @@ class AlignController:
                                      data            data
 
 
-        :type monitor_model_adapter: hwmonitor.monitors.vscreen_adapter.VScreenAdapter
+        :type vscreen: hwmonitor.vscreen.vscreen.VScreen
         """
         self.map = {}
-        self.monitor_model_adapter = monitor_model_adapter
+        self.vscreen = vscreen
         self.common_model = AlignViewModel()
 
     def key_pressed(self, model: AlignModel, key):
@@ -58,8 +58,8 @@ class AlignController:
         return True
 
     def start(self):
-        for monitor in self.monitor_model_adapter:
-            model = AlignModel(monitor, self.common_model, self.monitor_model_adapter)
+        for monitor in self.vscreen.monitors:
+            model = AlignModel(monitor, self.common_model, self.vscreen)
             widget = AlignWidget(self, model)
             widget.showFullScreen()
 

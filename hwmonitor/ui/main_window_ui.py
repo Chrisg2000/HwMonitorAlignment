@@ -1,23 +1,23 @@
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QGroupBox, QHBoxLayout, QDialogButtonBox
 
-from hwmonitor.monitors.vscreen_adapter import VScreenAdapter
 from hwmonitor.ui.common.monitor_info_box_ui import UiMonitorInfoBox
 from hwmonitor.ui.widgets.monitor_overview import MonitorOverview
+from hwmonitor.vscreen.vscreen import VScreen
 
 
 class UiMainWindow:
 
-    def __init__(self, window: QMainWindow, monitor_model_adapter: VScreenAdapter):
+    def __init__(self, window: QMainWindow, vscreen: VScreen):
         self.window = window
-        self.monitor_model_adapter = monitor_model_adapter
+        self.vscreen = vscreen
 
         self.centralWidget = QWidget()
         self.centralWidget.setLayout(QVBoxLayout())
         self.centralWidget.layout().setContentsMargins(0, 0, 0, 0)
         window.setCentralWidget(self.centralWidget)
 
-        self.monitor_overview_widget = MonitorOverview(monitor_model_adapter)
+        self.monitor_overview_widget = MonitorOverview(vscreen)
         self.centralWidget.layout().addWidget(self.monitor_overview_widget)
 
         self.sub_widget = QWidget()
@@ -28,7 +28,7 @@ class UiMainWindow:
         self.monitor_info_group = QGroupBox()
         self.monitor_info_group.setLayout(QHBoxLayout())
 
-        for monitor in self.monitor_model_adapter.get_monitor_order():
+        for monitor in self.vscreen.monitor_order:
             info_box = QGroupBox("Monitor Information")
             info_box.ui = UiMonitorInfoBox(info_box, monitor)
             self.monitor_info_group.layout().addWidget(info_box)

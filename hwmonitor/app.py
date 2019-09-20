@@ -6,11 +6,11 @@ class HwMonitorAlignmentApp:
 
     def __init__(self):
         self.backend = Win32Backend()
-        self.monitor_model_adapter = self.backend.get_system_monitor_model()
+        self.vscreen = self.backend.get_vscreen()
         self.main_window = None
 
     def start(self):
-        self.main_window = MainWindow(self.monitor_model_adapter)
+        self.main_window = MainWindow(self.vscreen)
         self.main_window.show()
 
     def finalize(self, exit_code: int):

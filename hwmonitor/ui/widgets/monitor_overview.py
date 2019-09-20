@@ -3,18 +3,18 @@ from PySide2.QtGui import QPainter, QPaintEvent, QColor, QLinearGradient, QFont,
 from PySide2.QtWidgets import QWidget
 
 from hwmonitor.monitors.monitor import Monitor
-from hwmonitor.monitors.vscreen_adapter import VScreenAdapter
+from hwmonitor.vscreen.vscreen import VScreen
 
 
 class MonitorOverview(QWidget):
 
-    def __init__(self, monitor_model_adapter: VScreenAdapter, parent=None):
+    def __init__(self, vscreen: VScreen, parent=None):
         super().__init__(parent=parent)
 
-        self.monitor_model_adapter = monitor_model_adapter
-        self.monitor_model_adapter.item_added.connect(self._monitor_added)
-        self.monitor_model_adapter.item_removed.connect(self._monitor_removed)
-        self.monitor_model_adapter.model_reset.connect(self._reset)
+        self.vscreen = vscreen
+        self.vscreen.monitor_added.connect(self._monitor_added)
+        self.vscreen.monitor_removed.connect(self._monitor_removed)
+        self.vscreen.monitor_model_reset.connect(self._reset)
 
         self.vscreen_width = 0
         self.vscreen_height = 0
@@ -48,8 +48,8 @@ class MonitorOverview(QWidget):
         self._reset()
 
     def _reset(self, model_reset=True):
-        self.vscreen_width, self.vscreen_height = self.monitor_model_adapter.get_vscreen_size()
-        self.x_offset, self.y_offset = self.monitor_model_adapter.get_vscreen_normalize_offset()
+        self.vscreen_width, self.vscreen_height = self.vscreen.size
+        self.x_offset, self.y_offset = self.vscreen.offset
         self.vscreen_ratio = self.vscreen_width / self.vscreen_height
 
         if model_reset:
@@ -93,7 +93,7 @@ class MonitorOverview(QWidget):
 
         # Draw for each monitor corresponding
         monitor: Monitor
-        for index, monitor in enumerate(self.monitor_model_adapter, 1):
+        for index, monitor in enumerate(self.vscreen.monitors, 1):
             # calculate position of monitor in canvas
             pos_x = self.__view_offset_x + self.__view_ratio * (monitor.position_x - self.x_offset)
             pos_y = self.__view_offset_y + self.__view_ratio * (monitor.position_y - self.y_offset)

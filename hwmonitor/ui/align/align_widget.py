@@ -9,7 +9,7 @@ class AlignWidget(QGraphicsView):
     def __init__(self, controller, model, parent=None):
         """Widget which is drawn on every monitor to align them.
 
-        The model and controller is shared among all other widgets on the different monitors
+        The model and controller is shared among all other widgets on the different _monitors
 
         :type controller: hwmonitor.ui.align.align_controller.AlignController
         :type model: hwmonitor.ui.align.models.align_model.AlignModel

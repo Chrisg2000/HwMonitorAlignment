@@ -1,14 +1,14 @@
 from hwmonitor.core.has_properties import HasProperties, Property
 from hwmonitor.monitors.monitor import Monitor
-from hwmonitor.monitors.vscreen_adapter import VScreenAdapter
 from hwmonitor.ui.align.models.view_model import AlignViewModel
+from hwmonitor.vscreen.vscreen import VScreen
 
 
 class AlignModel(HasProperties):
     monitor = Property(default="")
     offset = Property(default=0)
 
-    def __init__(self, monitor: Monitor, common_model: AlignViewModel, monitor_model_adapter: VScreenAdapter):
+    def __init__(self, monitor: Monitor, common_model: AlignViewModel, vscreen: VScreen):
         """Model for each AlignWidget.
 
         This model holds the monitor for the widget and implements its behavior.
@@ -20,15 +20,15 @@ class AlignModel(HasProperties):
 
         self.monitor = monitor
         self.common_model = common_model
-        self.monitor_model_adapter = monitor_model_adapter
+        self.vscreen = vscreen
 
     @property
     def vscreen_offset(self):
-        return self.monitor_model_adapter.get_vscreen_normalize_offset()
+        return self.vscreen.offset
 
     @property
     def vscreen_size(self):
-        return self.monitor_model_adapter.get_vscreen_size()
+        return self.vscreen.size
 
     def monitor_changed(self, monitor: Monitor):
         self.__monitor_memento = monitor.create_memento()
