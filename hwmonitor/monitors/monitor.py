@@ -81,10 +81,6 @@ class Monitor(HasProperties, Memento):
         self.post_apply_changes = Signal()
         self.error_apply_changes = Signal()
 
-        self.pre_sync_model = Signal()
-        self.post_sync_model = Signal()
-        self.error_sync_model = Signal()
-
         self.property_changed.connect(self._update_sync_state)
 
     def apply_changes(self):

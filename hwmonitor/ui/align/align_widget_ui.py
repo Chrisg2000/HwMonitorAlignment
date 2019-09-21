@@ -2,8 +2,8 @@ from PySide2.QtCore import Qt, QRectF, QRect, QSize
 from PySide2.QtGui import QPainter
 from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsLineItem, QStyle
 
+from hwmonitor.ui.align.items.alignment_line_item import AlignmentLineItem
 from hwmonitor.ui.align.items.control_box_item import ControlBoxItem
-from hwmonitor.ui.align.items.horizontal_lines_item import HorizontalLinesItem
 from hwmonitor.ui.align.items.monitor_info_box_item import MonitorInfoBoxItem
 from hwmonitor.ui.graphics.graphics_layer import GraphicsLayer
 
@@ -46,7 +46,7 @@ class UiAlignWidget:
 
         self.info_box = MonitorInfoBoxItem(self.model)
         self.control_box = ControlBoxItem(self.model.common_model)
-        self.horizontal_lines = HorizontalLinesItem(self.model)
+        self.horizontal_lines = AlignmentLineItem(self.model)
 
         self.create_diagonal_lines()
         self.create_info_box()

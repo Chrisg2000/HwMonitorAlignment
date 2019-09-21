@@ -2,6 +2,7 @@ from abc import abstractmethod
 from typing import Tuple
 
 from hwmonitor.core.signals import Signal
+from hwmonitor.monitors.monitor import Monitor
 from hwmonitor.monitors.monitor_model import MonitorModel
 
 
@@ -16,17 +17,19 @@ class VScreen:
         self.monitor_removed = Signal()
         self.monitor_model_reset = Signal()
 
+        self.arrangement_changed = Signal()
+
         self._monitors.item_added.connect(self.monitor_added.emit)
         self._monitors.item_removed.connect(self.monitor_removed.emit)
         self._monitors.model_reset.connect(self.monitor_model_reset.emit)
 
     @property
-    def monitors(self):
+    def monitors(self) -> MonitorModel:
         return self._monitors
 
     @property
     @abstractmethod
-    def primary_monitor(self):
+    def primary_monitor(self) -> Monitor:
         """Returns the monitor which has primary flag set"""
 
     @property
@@ -40,7 +43,7 @@ class VScreen:
 
     @property
     @abstractmethod
-    def size(self):
+    def size(self) -> Tuple[int, int]:
         """Return the width and height of the virtual screen in pixels.
 
         The virtual screen is the bounding rectangle of all display _monitors.
@@ -55,9 +58,16 @@ class VScreen:
         """
 
     @abstractmethod
-    def get_from_position(self, x, y):
+    def get_from_position(self, x, y) -> Monitor:
         """Returns the monitor which includes the given position on the virtual screen.
         If supplied position is outside of visible virtual screen area a LookupError will be raised.
 
         The virtual screen is the bounding rectangle of all display _monitors.
+        """
+
+    @abstractmethod
+    def apply_changes(self):
+        """Apply the modification to the system. This method should inform the underlying
+        system that the arrangement of the monitors on the virtual screen has changes.
+        This may not be required, depending on the implementation of monitor
         """

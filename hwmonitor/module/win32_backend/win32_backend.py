@@ -32,8 +32,6 @@ class Win32Backend(Backend):
         if device_name is None:
             # Apply settings
             return ChangeDisplaySettingsEx(None, None, 0, None)
-        elif device_name not in self.monitor_model:
-            raise ValueError(f"Monitor device {device_name} is not registered in this backend")
         devmode = EnumDisplaySettings(device_name,
                                       DevmodeSettings.ENUM_REGISTRY_SETTINGS)
         devmode.dmPosition = (x, y)

@@ -38,6 +38,6 @@ class AlignModel(HasProperties):
         self.monitor.set_memento(self.__monitor_memento)
 
     def apply_offset(self):
-        self.monitor.position_y -= self.offset
+        self.monitor.position_y += self.offset
         self.offset = 0
         self.monitor.apply_changes()

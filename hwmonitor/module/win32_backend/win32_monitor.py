@@ -33,7 +33,8 @@ class Win32Monitor(Monitor):
 
     def __apply_changes__(self):
         if self.backend:
-            self.backend.set_monitor_position(self.device_name, self.position_x, self.position_y)
+            self.backend.set_monitor_position(self.device_name, self.position_x, self.position_y, reset=False)
+            return True
         else:
             raise NoBackendFoundError('Win32Monitor requires an backend')
 

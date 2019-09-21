@@ -34,17 +34,18 @@ class AlignController:
 
         :type vscreen: hwmonitor.vscreen.vscreen.VScreen
         """
-        self.map = {}
+        self.device_model = {}
+        self.device_widget = {}
         self.vscreen = vscreen
-        self.common_model = AlignViewModel()
+        self.common_model = None
 
     def key_pressed(self, model: AlignModel, key):
         if key == Qt.Key_Escape:
             self.stop()
         elif key == Qt.Key_Up and not model.monitor.primary:
-            model.offset -= 1
-        elif key == Qt.Key_Down and not model.monitor.primary:
             model.offset += 1
+        elif key == Qt.Key_Down and not model.monitor.primary:
+            model.offset -= 1
         else:
             return True
 
@@ -58,30 +59,36 @@ class AlignController:
         return True
 
     def start(self):
+        self.common_model = AlignViewModel()
         for monitor in self.vscreen.monitors:
             model = AlignModel(monitor, self.common_model, self.vscreen)
             widget = AlignWidget(self, model)
             widget.showFullScreen()
 
-            self.map[monitor] = (model, widget)
+            self.device_model[monitor.device_name] = model
+            self.device_widget[monitor.device_name] = widget
 
     def stop(self):
-        for _, widget in self.map.values():
+        for widget in self.device_widget.values():
             widget.close()
-        self.map.clear()
+        self.common_model = None
+        self.device_model.clear()
+        self.device_widget.clear()
 
     def button_apply(self, checked=False):
         """Align Widget Control Box Dialog Buttons Apply"""
-        for model, _ in self.map.values():
+        for model in self.device_model.values():
             model.apply_offset()
+        self.vscreen.apply_changes()
 
         # Reset logic
-        dialog = DisplaySettingsChanged(timeout=20)
+        dialog = DisplaySettingsChanged(timeout=15)
         rst = dialog.exec_()
         if rst == DisplaySettingsChanged.No:
-            for model, _ in self.map.values():
+            for model in self.device_model.values():
                 model.rollback()
                 model.apply_offset()
+            self.vscreen.apply_changes()
 
     def button_close(self, checked=False):
         """Align Widget Control Box Dialog Buttons Close"""
@@ -89,5 +96,5 @@ class AlignController:
 
     def button_reset(self, checked=False):
         """Align Widget Control Box Dialog Buttons Reset"""
-        for model, _ in self.map.values():
+        for model in self.device_model.values():
             model.rollback()

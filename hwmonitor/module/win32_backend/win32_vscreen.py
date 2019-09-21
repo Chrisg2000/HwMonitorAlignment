@@ -13,7 +13,7 @@ class Win32VScreen(VScreen):
 
     @property
     def primary_monitor(self):
-        return self.monitors.filter(lambda monitor: monitor.primary)
+        return next(self.monitors.filter(lambda monitor: monitor.primary))
 
     @property
     def monitor_order(self):
@@ -35,3 +35,7 @@ class Win32VScreen(VScreen):
                     monitor.position_y <= y <= monitor.position_y + monitor.screen_height:
                 return monitor
         raise LookupError("Requested position is outside of visible virtual screen area")
+
+    def apply_changes(self):
+        self._backend.set_monitor_position(None, 0, 0)
+        self.arrangement_changed.emit()

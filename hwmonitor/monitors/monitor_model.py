@@ -49,7 +49,7 @@ class MonitorModel(Model):
         self.model_reset.emit()
 
     def filter(self, operation):
-        """Returns a iterator over monitors for which operation yields True
+        """Returns a generator over monitors for which operation yields True
         """
         for monitor in self.__monitors.values():
             if operation(monitor):
