@@ -38,4 +38,4 @@ class Win32VScreen(VScreen):
 
     def apply_changes(self):
         self._backend.set_monitor_position(None, 0, 0)
-        self.arrangement_changed.emit()
+        self.layout_changed.emit()

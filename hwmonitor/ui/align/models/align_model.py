@@ -18,9 +18,9 @@ class AlignModel(HasProperties):
         self.__monitor_memento = None
         self.changed("monitor").connect(self.monitor_changed)
 
+        self.vscreen = vscreen
         self.monitor = monitor
         self.common_model = common_model
-        self.vscreen = vscreen
 
     @property
     def vscreen_offset(self):

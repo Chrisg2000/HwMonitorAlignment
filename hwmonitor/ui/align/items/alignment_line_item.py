@@ -17,7 +17,6 @@ class AlignmentLineItem(QGraphicsItem):
         self._update_graph()
         self.model.common_model.changed("line_thickness").connect(self._update)
         self.model.common_model.changed("line_spacing").connect(self._update)
-        self.model.common_model.changed("show_horizontal_text").connect(self._update)
 
     def boundingRect(self) -> QRectF:
         return QRectF(0, 0,
@@ -36,7 +35,6 @@ class AlignmentLineItem(QGraphicsItem):
 
         painter.drawLine(0, self._glob_h_mid_line,
                          monitor.screen_width, self._glob_h_mid_line)
-
         painter.drawLine(0, self._glob_h_under_mid_line,
                          self._h_line_length, self._glob_h_under_mid_line)
         painter.drawLine(monitor.screen_width, self._glob_h_under_mid_line,
@@ -59,6 +57,7 @@ class AlignmentLineItem(QGraphicsItem):
         self.update(self.boundingRect())
 
     def update_offset(self, offset):
+        self._update_graph()
         self.setY(-offset)
 
     def update(self, rect: QRectF = None):

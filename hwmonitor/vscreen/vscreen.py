@@ -13,11 +13,10 @@ class VScreen:
 
         self._monitors = monitors
 
+        self.layout_changed = Signal()
         self.monitor_added = Signal()
         self.monitor_removed = Signal()
         self.monitor_model_reset = Signal()
-
-        self.arrangement_changed = Signal()
 
         self._monitors.item_added.connect(self.monitor_added.emit)
         self._monitors.item_removed.connect(self.monitor_removed.emit)
@@ -68,6 +67,8 @@ class VScreen:
     @abstractmethod
     def apply_changes(self):
         """Apply the modification to the system. This method should inform the underlying
-        system that the arrangement of the monitors on the virtual screen has changes.
-        This may not be required, depending on the implementation of monitor
+        system that the layout of the monitors on the virtual screen has changes.
+        This may not be required, depending on the implementation of monitor.
+
+        If this function is called the layout_changed signal should be emitted.
         """

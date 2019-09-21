@@ -9,7 +9,7 @@ class AlignWidget(QGraphicsView):
     def __init__(self, controller, model, parent=None):
         """Widget which is drawn on every monitor to align them.
 
-        The model and controller is shared among all other widgets on the different _monitors
+        The model and controller is shared among all other widgets on the different monitors
 
         :type controller: hwmonitor.ui.align.align_controller.AlignController
         :type model: hwmonitor.ui.align.models.align_model.AlignModel
@@ -33,6 +33,9 @@ class AlignWidget(QGraphicsView):
         self.resize(self.model.monitor.screen_width,
                     self.model.monitor.screen_height)
 
+        self.model.monitor.changed("position_x").connect(self._set_pos_x)
+        self.model.monitor.changed("position_y").connect(self._set_pos_y)
+
     def keyPressEvent(self, event: QKeyEvent):
         if self.controller.key_pressed(self.model, event.key()):
             super().keyPressEvent(event)
@@ -48,3 +51,9 @@ class AlignWidget(QGraphicsView):
     def mousePressEvent(self, event: QMouseEvent):
         self.ui.info_box.widget.raise_()
         super().mousePressEvent(event)
+
+    def _set_pos_x(self, x):
+        self.move(x, self.pos().y())
+
+    def _set_pos_y(self, y):
+        self.move(self.pos().x(), y)

@@ -28,7 +28,7 @@ class UiAlignWidget:
         view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-        view.setRenderHint(QPainter.Antialiasing)
+        view.setRenderHint(QPainter.Antialiasing, self.model.common_model.antialiasing)
         view.setViewportUpdateMode(QGraphicsView.MinimalViewportUpdate)
         view.setOptimizationFlag(QGraphicsView.DontAdjustForAntialiasing)
 
@@ -42,6 +42,7 @@ class UiAlignWidget:
 
         self.model.common_model.changed("show_diagonal_lines").connect(self.diagonal_lines_layer.set_visible)
         self.model.common_model.changed("show_horizontal_lines").connect(self.horizontal_lines_layer.set_visible)
+        self.model.common_model.changed("antialiasing").connect(self._set_antialiasing)
         self.model.common_model.changed("show_info_box").connect(self.info_box_layer.set_visible)
 
         self.info_box = MonitorInfoBoxItem(self.model)
@@ -80,6 +81,9 @@ class UiAlignWidget:
     def create_horizontal_lines(self):
         self.horizontal_lines_layer.add_to_layer(self.horizontal_lines)
         self.graphics_scene.addItem(self.horizontal_lines)
+
+    def _set_antialiasing(self, antialiasing):
+        self.view.setRenderHint(QPainter.Antialiasing, antialiasing)
 
     def _arrange_items(self):
         """
