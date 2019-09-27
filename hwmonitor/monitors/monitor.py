@@ -91,10 +91,10 @@ class Monitor(HasProperties, Memento):
             if not result:
                 raise OSError
             self._state = MonitorSyncState.SYNCHRONIZED
-            self.post_apply_changes.emit(result)
+            self.post_apply_changes.emit(self, result)
             return result
         except OSError as error:
-            self.error_apply_changes.emit(error)
+            self.error_apply_changes.emit(self, error)
 
     @abstractmethod
     def __apply_changes__(self):

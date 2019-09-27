@@ -2,10 +2,10 @@ from PySide2.QtCore import Qt, QRectF, QRect, QSize
 from PySide2.QtGui import QPainter
 from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsLineItem, QStyle
 
-from hwmonitor.ui.align.items.alignment_line_item import AlignmentLineItem
-from hwmonitor.ui.align.items.control_box_item import ControlBoxItem
-from hwmonitor.ui.align.items.monitor_info_box_item import MonitorInfoBoxItem
 from hwmonitor.ui.graphics.graphics_layer import GraphicsLayer
+from hwmonitor.ui.widgets.align.items.alignment_line_item import AlignmentLineItem
+from hwmonitor.ui.widgets.align.items.control_box_item import ControlBoxItem
+from hwmonitor.ui.widgets.align.items.monitor_info_box_item import MonitorInfoBoxItem
 
 
 class UiAlignWidget:

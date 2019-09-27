@@ -2,7 +2,7 @@ from PySide2.QtCore import QRectF, Qt
 from PySide2.QtGui import QPainter, QPen
 from PySide2.QtWidgets import QGraphicsItem, QStyleOptionGraphicsItem
 
-from hwmonitor.ui.align.models.align_model import AlignModel
+from hwmonitor.ui.widgets.align.models.align_model import AlignModel
 
 
 class AlignmentLineItem(QGraphicsItem):

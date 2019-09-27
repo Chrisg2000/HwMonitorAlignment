@@ -1,6 +1,6 @@
 from hwmonitor.core.has_properties import HasProperties, Property
 from hwmonitor.monitors.monitor import Monitor
-from hwmonitor.ui.align.models.view_model import AlignViewModel
+from hwmonitor.ui.widgets.align.models.view_model import AlignViewModel
 from hwmonitor.vscreen.vscreen import VScreen
 
 

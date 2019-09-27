@@ -1,8 +1,8 @@
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QGroupBox, QHBoxLayout, QDialogButtonBox
+from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QGroupBox, QHBoxLayout, QDialogButtonBox, QSizePolicy
 
 from hwmonitor.ui.common.monitor_info_box_ui import UiMonitorInfoBox
-from hwmonitor.ui.widgets.monitor_overview import MonitorOverview
+from hwmonitor.ui.widgets.overview.vscreen_overview import VScreenOverview
 from hwmonitor.vscreen.vscreen import VScreen
 
 
@@ -12,12 +12,18 @@ class UiMainWindow:
         self.window = window
         self.vscreen = vscreen
 
+        window.setWindowFlags(Qt.Window
+                              | Qt.MSWindowsFixedSizeDialogHint
+                              | Qt.WindowMinimizeButtonHint
+                              | Qt.WindowCloseButtonHint
+                              | Qt.CustomizeWindowHint)
+
         self.centralWidget = QWidget()
         self.centralWidget.setLayout(QVBoxLayout())
         self.centralWidget.layout().setContentsMargins(0, 0, 0, 0)
         window.setCentralWidget(self.centralWidget)
 
-        self.monitor_overview_widget = MonitorOverview(vscreen)
+        self.monitor_overview_widget = VScreenOverview(vscreen, window)
         self.centralWidget.layout().addWidget(self.monitor_overview_widget)
 
         self.sub_widget = QWidget()

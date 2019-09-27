@@ -2,10 +2,10 @@ from PySide2.QtCore import Qt
 from PySide2.QtGui import QMouseEvent
 from PySide2.QtWidgets import QToolTip
 
-from hwmonitor.ui.align.align_widget import AlignWidget
-from hwmonitor.ui.align.models.align_model import AlignModel
-from hwmonitor.ui.align.models.view_model import AlignViewModel
+from hwmonitor.ui.widgets.align.align_widget import AlignWidget
 from hwmonitor.ui.dialogs.settings_changed import DisplaySettingsChanged
+from hwmonitor.ui.widgets.align.models.align_model import AlignModel
+from hwmonitor.ui.widgets.align.models.view_model import AlignViewModel
 
 
 class AlignController:
@@ -46,6 +46,8 @@ class AlignController:
             model.offset += 1
         elif key == Qt.Key_Down and not model.monitor.primary:
             model.offset -= 1
+        elif key == Qt.Key_O:
+            self.vscreen.layout_changed.emit()
         else:
             return True
 

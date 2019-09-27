@@ -1,7 +1,6 @@
-from PySide2.QtGui import QCloseEvent
 from PySide2.QtWidgets import QMainWindow
 
-from hwmonitor.ui.align.align_controller import AlignController
+from hwmonitor.ui.widgets.align.align_controller import AlignController
 from hwmonitor.ui.main_window_ui import UiMainWindow
 from hwmonitor.vscreen.vscreen import VScreen
 
@@ -25,6 +24,3 @@ class MainWindow(QMainWindow):
 
     def finalize(self):
         self.align_controller.stop()
-
-    def closeEvent(self, event: QCloseEvent):
-        self.finalize()

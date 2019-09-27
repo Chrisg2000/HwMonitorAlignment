@@ -1,7 +1,7 @@
 from PySide2.QtGui import QKeyEvent, QWheelEvent, QMouseEvent
 from PySide2.QtWidgets import QGraphicsView, QDialogButtonBox
 
-from hwmonitor.ui.align.align_widget_ui import UiAlignWidget
+from hwmonitor.ui.widgets.align.align_widget_ui import UiAlignWidget
 
 
 class AlignWidget(QGraphicsView):
