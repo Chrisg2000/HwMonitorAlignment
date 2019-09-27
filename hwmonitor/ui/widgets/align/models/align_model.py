@@ -6,7 +6,6 @@ from hwmonitor.vscreen.vscreen import VScreen
 
 class AlignModel(HasProperties):
     monitor = Property(default="")
-    offset = Property(default=0)
 
     def __init__(self, monitor: Monitor, common_model: AlignViewModel, vscreen: VScreen):
         """Model for each AlignWidget.
@@ -34,10 +33,7 @@ class AlignModel(HasProperties):
         self.__monitor_memento = monitor.create_memento()
 
     def rollback(self):
-        self.offset = 0
         self.monitor.set_memento(self.__monitor_memento)
 
     def apply_offset(self):
-        self.monitor.position_y += self.offset
-        self.offset = 0
         self.monitor.apply_changes()

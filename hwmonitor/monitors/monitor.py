@@ -1,5 +1,4 @@
 import enum
-from abc import abstractmethod
 from typing import Tuple
 
 from hwmonitor.core.has_properties import HasProperties, Property, WriteOnceProperty
@@ -72,7 +71,7 @@ class Monitor(HasProperties, Memento):
         self.screen_height = screen_height
         self.position_x = position_x
         self.position_y = position_y
-        self.orientation = orientation
+        self.orientation = MonitorOrientation(orientation)
         self.primary = primary
 
         self._state = MonitorSyncState.SYNCHRONIZED
@@ -96,7 +95,6 @@ class Monitor(HasProperties, Memento):
         except OSError as error:
             self.error_apply_changes.emit(self, error)
 
-    @abstractmethod
     def __apply_changes__(self):
         """Implement the monitor 'apply_changes' behavior.
 
@@ -118,6 +116,36 @@ class Monitor(HasProperties, Memento):
     @property
     def size(self) -> Tuple[int, int]:
         return self.screen_width, self.screen_height
+
+    def create_memento(self):
+        return (self.device_name,
+                self.monitor_name,
+                self.friendly_monitor_name,
+                self.display_adapter,
+                self.screen_width,
+                self.screen_height,
+                self.position_x,
+                self.position_y,
+                self.orientation,
+                self.primary)
+
+    def set_memento(self, memento):
+        (self.device_name,
+         self.monitor_name,
+         self.friendly_monitor_name,
+         self.display_adapter,
+         self.screen_width,
+         self.screen_height,
+         self.position_x,
+         self.position_y,
+         self.orientation,
+         self.primary) = memento
+
+    @classmethod
+    def from_memento(cls, memento):
+        monitor = Monitor()
+        monitor.set_memento(memento)
+        return monitor
 
     def _update_sync_state(self, instance, name, value):
         if getattr(self, name) == value:

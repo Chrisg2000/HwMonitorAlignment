@@ -3,17 +3,18 @@ from PySide2.QtGui import QShowEvent
 from PySide2.QtWidgets import QMessageBox
 
 
-class DisplaySettingsChanged(QMessageBox):
+class RollbackChangesDialog(QMessageBox):
 
     def __init__(self, timeout=20, parent=None):
         super().__init__(parent)
         self.timeout = timeout
 
         self.setWindowTitle("Änderung übernehmen?")
-        self.setWindowFlags(Qt.Dialog |
-                            Qt.CustomizeWindowHint |
-                            Qt.WindowTitleHint |
-                            Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowFlags(Qt.Dialog
+                            | Qt.CustomizeWindowHint
+                            | Qt.WindowTitleHint
+                            | Qt.MSWindowsFixedSizeDialogHint
+                            | Qt.WindowStaysOnTopHint)
 
         self.setIcon(QMessageBox.Warning)
         self.setText("Ihre Desktop-Konfiguration hat sich geändert.\n"

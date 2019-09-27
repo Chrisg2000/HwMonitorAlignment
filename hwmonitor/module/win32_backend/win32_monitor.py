@@ -37,33 +37,3 @@ class Win32Monitor(Monitor):
             return True
         else:
             raise NoBackendFoundError('Win32Monitor requires an backend')
-
-    def create_memento(self):
-        return (self.device_name,
-                self.monitor_name,
-                self.friendly_monitor_name,
-                self.display_adapter,
-                self.screen_width,
-                self.screen_height,
-                self.position_x,
-                self.position_y,
-                self.orientation,
-                self.primary)
-
-    def set_memento(self, memento):
-        (self.device_name,
-         self.monitor_name,
-         self.friendly_monitor_name,
-         self.display_adapter,
-         self.screen_width,
-         self.screen_height,
-         self.position_x,
-         self.position_y,
-         self.orientation,
-         self.primary) = memento
-
-    @classmethod
-    def from_memento(cls, memento):
-        monitor = Monitor()
-        monitor.set_memento(memento)
-        return monitor

@@ -3,7 +3,7 @@ from PySide2.QtGui import QMouseEvent
 from PySide2.QtWidgets import QToolTip
 
 from hwmonitor.ui.widgets.align.align_widget import AlignWidget
-from hwmonitor.ui.dialogs.settings_changed import DisplaySettingsChanged
+from hwmonitor.ui.dialogs.rollback_changes_dialog import RollbackChangesDialog
 from hwmonitor.ui.widgets.align.models.align_model import AlignModel
 from hwmonitor.ui.widgets.align.models.view_model import AlignViewModel
 
@@ -43,11 +43,13 @@ class AlignController:
         if key == Qt.Key_Escape:
             self.stop()
         elif key == Qt.Key_Up and not model.monitor.primary:
-            model.offset += 1
+            model.monitor.position_y += 1
         elif key == Qt.Key_Down and not model.monitor.primary:
-            model.offset -= 1
-        elif key == Qt.Key_O:
-            self.vscreen.layout_changed.emit()
+            model.monitor.position_y -= 1
+        elif key == Qt.Key_PageUp and not model.monitor.primary:
+            model.monitor.position_y += 10
+        elif key == Qt.Key_PageDown and not model.monitor.primary:
+            model.monitor.position_y -= 10
         else:
             return True
 
@@ -84,9 +86,9 @@ class AlignController:
         self.vscreen.apply_changes()
 
         # Reset logic
-        dialog = DisplaySettingsChanged(timeout=15)
+        dialog = RollbackChangesDialog(timeout=15)
         rst = dialog.exec_()
-        if rst == DisplaySettingsChanged.No:
+        if rst == RollbackChangesDialog.No:
             for model in self.device_model.values():
                 model.rollback()
                 model.apply_offset()

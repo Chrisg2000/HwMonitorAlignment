@@ -12,7 +12,7 @@ class AlignWidget(QGraphicsView):
         The model and controller is shared among all other widgets on the different monitors
 
         :type controller: hwmonitor.ui.align.align_controller.AlignController
-        :type model: hwmonitor.ui.align.models.align_model.AlignModel
+        :type model: hwmonitor.ui.widgets.align.models.align_model.AlignModel
         """
         super().__init__(parent)
         self.model = model
@@ -28,13 +28,8 @@ class AlignWidget(QGraphicsView):
             self.ui.control_box.ui.button_box.button(QDialogButtonBox.Reset).clicked.connect(
                 self.controller.button_reset)
 
-        self.move(self.model.monitor.position_x,
-                  self.model.monitor.position_y)
-        self.resize(self.model.monitor.screen_width,
-                    self.model.monitor.screen_height)
-
-        self.model.monitor.changed("position_x").connect(self._set_pos_x)
-        self.model.monitor.changed("position_y").connect(self._set_pos_y)
+        self._update_positions()
+        self.model.vscreen.layout_changed.connect(self._update_positions)
 
     def keyPressEvent(self, event: QKeyEvent):
         if self.controller.key_pressed(self.model, event.key()):
@@ -52,8 +47,11 @@ class AlignWidget(QGraphicsView):
         self.ui.info_box.widget.raise_()
         super().mousePressEvent(event)
 
-    def _set_pos_x(self, x):
-        self.move(x, self.pos().y())
-
-    def _set_pos_y(self, y):
-        self.move(self.pos().x(), y)
+    def _update_positions(self):
+        """This method is called when the layout of the monitor on the virtual screen
+        changes. It updates the position of this widget to align them to the new position.
+        """
+        self.move(self.model.monitor.position_x,
+                  self.model.monitor.position_y)
+        self.resize(self.model.monitor.screen_width,
+                    self.model.monitor.screen_height)

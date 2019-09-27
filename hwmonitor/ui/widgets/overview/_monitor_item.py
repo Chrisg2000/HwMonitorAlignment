@@ -64,3 +64,7 @@ class MonitorRepresentation(QGraphicsItem):
 
         painter.drawText(rect, Qt.AlignCenter, txt)
         painter.restore()
+
+    def update_position(self):
+        self.setPos(self.monitor.position_x,
+                    self.monitor.position_y)

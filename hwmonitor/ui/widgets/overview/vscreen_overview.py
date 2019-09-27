@@ -31,4 +31,5 @@ class VScreenOverview(QGraphicsView):
         super().resizeEvent(event)
 
     def _update_view(self):
+        self.ui.update_position()
         self.ui.resize_scene()

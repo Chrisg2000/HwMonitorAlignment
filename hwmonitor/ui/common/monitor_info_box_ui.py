@@ -1,6 +1,7 @@
 from PySide2.QtWidgets import QLabel, QFormLayout
 
 from hwmonitor.monitors.monitor import MonitorOrientation
+from hwmonitor.ui.ui_util import label_orientation
 
 FMT_DEVICE_NAME = "<b>{}</b>"
 FMT_MONITOR_NAME = "<b>{}</b>"
@@ -13,63 +14,37 @@ FMT_MONITOR_ORIENTATION = "<b>{}</b>"
 FMT_MONITOR_PRIMARY = "<b>{}</b>"
 
 
-def label_orientation(orientation: MonitorOrientation):
-    if orientation == MonitorOrientation.Landscape:
-        return 'Landscape'
-    elif orientation == MonitorOrientation.Portrait:
-        return 'Portrait'
-    elif orientation == MonitorOrientation.FlippedLandscape:
-        return 'Landscape (flipped)'
-    elif orientation == MonitorOrientation.FlippedPortrait:
-        return 'Portrait (flipped)'
-    else:
-        raise ValueError("orientation needs to be a DisplayOrientation")
-
-
-def format_proxy(fmt: str, orientation=False):
-    def wrapped(value):
-        if type(value) == tuple:
-            return fmt.format(*value)
-        if orientation:
-            value = label_orientation(value)
-        return fmt.format(value)
-
-    return wrapped
-
-
 class UiMonitorInfoBox:
 
-    def __init__(self, view, monitor, model=None):
+    def __init__(self, view, monitor):
         """ General Infobox for monitor item
 
         :type view: PySide2.QtWidgets.QWidget.QWidget
         :type monitor: hwmonitor.monitors.monitor.Monitor
-        :type model: hwmonitor.ui.align.models.align_model.AlignModel
         """
         self.monitor = monitor
         self.monitor.property_changed.connect(self._update_property)
-        self.model = model
         self._layout = QFormLayout()
         self._layout.setRowWrapPolicy(QFormLayout.WrapAllRows)
 
         self.property_labels = {}
-        self.device_name = self._property_label('device_name', func='device_name',
-                                                fmt=FMT_DEVICE_NAME, parent=view)
-        self.monitor_name = self._property_label('monitor_name', func='monitor_name',
-                                                 fmt=FMT_MONITOR_NAME, parent=view)
-        self.friendly_monitor_name = self._property_label('friendly_monitor_name', func='friendly_monitor_name',
-                                                          fmt=FMT_FRIENDLY_MONITOR_NAME, parent=view)
-        self.display_adapter = self._property_label('display_adapter', func='display_adapter',
-                                                    fmt=FMT_DISPLAY_ADAPTER, parent=view)
-        self.screen_resolution = self._property_label('screen_width', 'screen_height', func='size',
-                                                      fmt=FMT_SCREEN_RESOLUTION, parent=view)
-        self.vscreen_position = self._property_label('position_x', 'position_y', func='position',
-                                                     fmt=FMT_VSCREEN_POSITION, parent=view, model_prop='offset',
-                                                     model_func=self._position_model_modification)
-        self.orientation = self._property_label('orientation', func='orientation',
-                                                fmt=FMT_MONITOR_ORIENTATION, parent=view, ori=True)
-        self.primary = self._property_label('primary', func='primary',
-                                            fmt=FMT_MONITOR_PRIMARY, parent=view)
+        self.device_name = self._property_label('device_name',
+                                                func='device_name', fmt=FMT_DEVICE_NAME, parent=view)
+        self.monitor_name = self._property_label('monitor_name',
+                                                 func='monitor_name', fmt=FMT_MONITOR_NAME, parent=view)
+        self.friendly_monitor_name = self._property_label('friendly_monitor_name',
+                                                          func='friendly_monitor_name', fmt=FMT_FRIENDLY_MONITOR_NAME,
+                                                          parent=view)
+        self.display_adapter = self._property_label('display_adapter',
+                                                    func='display_adapter', fmt=FMT_DISPLAY_ADAPTER, parent=view)
+        self.screen_resolution = self._property_label('screen_width', 'screen_height',
+                                                      func='size', fmt=FMT_SCREEN_RESOLUTION, parent=view)
+        self.vscreen_position = self._property_label('position_x', 'position_y',
+                                                     func='position', fmt=FMT_VSCREEN_POSITION, parent=view)
+        self.orientation = self._property_label('orientation',
+                                                func='orientation', fmt=FMT_MONITOR_ORIENTATION, parent=view)
+        self.primary = self._property_label('primary',
+                                            func='primary', fmt=FMT_MONITOR_PRIMARY, parent=view)
 
         self._layout.addRow("DEVICE NAME:", self.device_name)
         self._layout.addRow("MONITOR NAME:", self.monitor_name)
@@ -82,16 +57,14 @@ class UiMonitorInfoBox:
 
         view.setLayout(self._layout)
 
-    def _property_label(self, *properties, func='', fmt='', parent=None, ori=False, model_prop='', model_func=None):
+    def _property_label(self, *properties, func='', fmt='', parent=None):
         label = QLabel(parent)
 
         def wrapped(value=None):
             value = getattr(self.monitor, func)
-            if model_prop and self.model:
-                value = model_func(value)
             if type(value) == tuple:
                 text = fmt.format(*value)
-            elif ori:
+            elif isinstance(value, MonitorOrientation):
                 text = fmt.format(label_orientation(value))
             else:
                 text = fmt.format(value)
@@ -99,15 +72,8 @@ class UiMonitorInfoBox:
 
         for pro in properties:
             self.property_labels[pro] = wrapped
-        if model_prop and self.model:
-            self.model.changed(model_prop).connect(wrapped)
         wrapped()
         return label
 
     def _update_property(self, instance, name, value):
         self.property_labels[name]()
-
-    def _position_model_modification(self, value):
-        x, y = value
-        y += self.model.offset
-        return x, y
