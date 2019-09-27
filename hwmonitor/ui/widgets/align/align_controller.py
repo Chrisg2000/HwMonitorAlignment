@@ -73,8 +73,9 @@ class AlignController:
             self.device_widget[monitor.device_name] = widget
 
     def stop(self):
-        for widget in self.device_widget.values():
+        for widget, model in zip(self.device_widget.values(), self.device_model.values()):
             widget.close()
+            model.rollback()
         self.common_model = None
         self.device_model.clear()
         self.device_widget.clear()
@@ -93,6 +94,9 @@ class AlignController:
                 model.rollback()
                 model.apply_offset()
             self.vscreen.apply_changes()
+
+        for widget in self.device_widget.values():
+            widget.close()
 
     def button_close(self, checked=False):
         """Align Widget Control Box Dialog Buttons Close"""

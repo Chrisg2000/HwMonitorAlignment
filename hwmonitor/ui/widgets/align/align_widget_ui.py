@@ -21,6 +21,7 @@ class UiAlignWidget:
 
         view.scale(1, 1)
         view.setWindowFlags(Qt.Tool)
+                            # | Qt.WindowStaysOnTopHint)
         view.setStyleSheet('border: 0px; background-color: white')
         view.setViewportMargins(0, 0, 0, 0)
         view.setContentsMargins(0, 0, 0, 0)
