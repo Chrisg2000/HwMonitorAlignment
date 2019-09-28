@@ -30,7 +30,9 @@ This tool was written in Python 3.7 and compiled into an binary with PyInstaller
 
 ## Description
 The tool uses the concept of the [virtual screen][1]. The virtual screen is the bounding rectange of all connected monitors to the computer. The primary screen contains the coordinate system origin (0,0) in the upper left corner.
+
 ![vscreen concept](https://docs.microsoft.com/en-us/windows/win32/gdi/images/multimon-1.png)
+
 It is not necessary that the origin is in the upper left corner of the virtual screen, so positions on it can be negative. 
 The coordinates of a monitor always point to the upper left corner. By moving the monitor on the virtual screen the monitors can be aligned to each other.
 
