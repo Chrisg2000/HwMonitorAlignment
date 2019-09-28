@@ -41,8 +41,10 @@ class UiMainWindow:
         self.sub_layout.addWidget(self.monitor_info_group)
 
         self.button_group = QDialogButtonBox(Qt.Horizontal)
+        self.button_group.setStyleSheet('* { button-layout: 2 }')
         self.close_button = self.button_group.addButton("Close", QDialogButtonBox.RejectRole)
         self.adjust_button = self.button_group.addButton("Adjust", QDialogButtonBox.ActionRole)
+        self.about_button = self.button_group.addButton("About", QDialogButtonBox.HelpRole)
         self.sub_layout.addWidget(self.button_group)
 
         self.translate_ui()

@@ -1,3 +1,5 @@
+from PySide2.QtGui import QPixmap, QIcon
+
 from hwmonitor.monitors.monitor import MonitorOrientation
 
 
@@ -24,3 +26,27 @@ def label_orientation(orientation: MonitorOrientation):
         return 'Portrait (flipped)'
     else:
         raise ValueError("orientation needs to be a DisplayOrientation")
+
+
+def load_icon(icon_name):
+    """Return a QIcon from the icon repository.
+
+    The loaded icons are cached
+
+    .. warning:
+        QIcons should be loaded only from the QT main loop.
+    """
+    return QIcon('hwmonitor/res/' + icon_name)
+
+
+def load_pixmap(pixmap_name):
+    """Return a QPixmap from icon repository.
+
+    The loaded pixmaps are cached
+
+    ..warning:
+        QPixmap should be loaded only from the QT main loop.
+    :type pixmap_name: name of pixmap in icon folder
+    :rtype: QPixmap
+    """
+    return QPixmap('hwmonitor/res/' + pixmap_name)
