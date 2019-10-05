@@ -1,7 +1,6 @@
 import sys
 
 from PySide2.QtCore import Qt
-from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import QApplication
 
 from hwmonitor.app import HwMonitorAlignmentApp
