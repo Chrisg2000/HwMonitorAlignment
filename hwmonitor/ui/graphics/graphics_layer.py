@@ -4,6 +4,12 @@ from PySide2.QtWidgets import QGraphicsItem
 class GraphicsLayer:
 
     def __init__(self, visible=True, level=1):
+        """ Groups logically all added widgets into one layer.
+
+        Purposely created for items inside an QGraphicsScene.
+        The visibility of the item is changed to be the value of this layer,
+        if removed it will be made visible again.
+        """
         self.__items = []
         self.__visible = visible
         self.__level = level
