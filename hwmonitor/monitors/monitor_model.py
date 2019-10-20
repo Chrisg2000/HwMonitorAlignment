@@ -49,39 +49,11 @@ class MonitorModel(Model):
         self.model_reset.emit()
 
     def filter(self, operation):
-        """Returns a iterator over monitors for which operation returns True
+        """Returns a generator over monitors for which operation yields True
         """
         for monitor in self.__monitors.values():
             if operation(monitor):
                 yield monitor
-
-    def get_primary_monitor(self):
-        """Returns the monitor which has the primary flag set
-        """
-        return self.filter(lambda monitor: monitor.primary)
-
-    def get_monitor_order(self):
-        """Yields the display monitors in order on the virtual screen
-        from left to right, top to bottom.
-
-        The virtual screen is the bounding rectangle of all display monitors.
-        """
-        return sorted(
-            self.__monitors.values(),
-            key=lambda monitor: (monitor.position_x, monitor.position_y)
-        )
-
-    def get_from_position(self, x, y):
-        """Returns the monitor which includes the given position on the virtual screen.
-        If supplied position is outside of visible virtual screen area a LookupError will be raised.
-
-        The virtual screen is the bounding rectangle of all display monitors.
-        """
-        for monitor in self.__monitors.values():
-            if monitor.position_x <= x <= monitor.position_x + monitor.screen_width and \
-                    monitor.position_y <= y <= monitor.position_y + monitor.screen_height:
-                return monitor
-        raise LookupError("Requested position is outside of visible virtual screen area")
 
     def __len__(self) -> int:
         return len(self.__monitors)
