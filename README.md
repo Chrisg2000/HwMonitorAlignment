@@ -24,9 +24,9 @@ This tool was written in Python 3.7 and compiled into an binary with PyInstaller
 
 1. Download the `hwmonitoralignment` binary from Releases tab.
 2. Clone this repository and start it up with Python 3.7
-	+ `C:\> git clone http://gitlab.chrisware.de/chris/hwmonitoralignment.git`
+	+ `C:\> git clone https://github.com/Chrisg2000/HwMonitorAlignment.git`
 	+ `C:\> pip install -r requirements.txt`
-	+ `C:\> python main.py`
+	+ `C:\> python hwa.py`
 
 ## Description
 The tool uses the concept of the [virtual screen][1]. The virtual screen is the bounding rectange of all connected monitors to the computer. The primary screen contains the coordinate system origin (0,0) in the upper left corner.
