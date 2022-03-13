@@ -44,5 +44,4 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: Release Files
-        path: build/ 
+        path: build/dist/hwa.exe
