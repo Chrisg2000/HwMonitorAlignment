@@ -37,4 +37,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Package to .exe
       run: |
-        pyinstaller -w  hwa.py
+        mkdir build
+        cd build
+        pyinstaller -w  ../hwa.py
+        cd ../
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Release .exe
+        path: build/ 
