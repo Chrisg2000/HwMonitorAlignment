@@ -9,7 +9,7 @@ class RollbackChangesDialog(QMessageBox):
         super().__init__(parent)
         self.timeout = timeout
 
-        self.setWindowTitle("Änderung übernehmen?")
+        self.setWindowTitle("Keep Change?")
         self.setWindowFlags(Qt.Dialog
                             | Qt.CustomizeWindowHint
                             | Qt.WindowTitleHint
@@ -17,9 +17,9 @@ class RollbackChangesDialog(QMessageBox):
                             | Qt.WindowStaysOnTopHint)
 
         self.setIcon(QMessageBox.Warning)
-        self.setText("Ihre Desktop-Konfiguration hat sich geändert.\n"
-                     "Möchten Sie diese Änderung beibehalten?")
-        self.setInformativeText(f"Rücksetzung in {self.timeout} Sekunden")
+        self.setText("Your desktop configuration has changed.\n"
+                     "Would you like to keep this change?")
+        self.setInformativeText(f"Reverting in {self.timeout} Seconds")
         self.setStandardButtons(QMessageBox.Yes |
                                 QMessageBox.No)
         self.setDefaultButton(QMessageBox.No)
@@ -36,4 +36,4 @@ class RollbackChangesDialog(QMessageBox):
         if self.timeout == 0:
             self._timer.stop()
             self.defaultButton().animateClick()
-        self.setInformativeText(f"Rücksetzung in {self.timeout} Sekunden")
+        self.setInformativeText(f"Reverting in {self.timeout} Seconds")
